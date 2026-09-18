@@ -27,7 +27,7 @@
   select,button{background:#0f1528;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 8px}
   button{cursor:pointer}
   button.primary{background:#12352e;border-color:#2a6b5c;color:var(--eed)}
-  canvas{width:100%;height:220px;background:#070b16;border-radius:8px;border:1px solid var(--line)}
+  canvas{width:100%;height:auto;aspect-ratio:900/280;background:#070b16;border-radius:8px;border:1px solid var(--line);display:block}
   .legend{display:flex;flex-wrap:wrap;gap:8px 12px;margin-top:6px;font-size:11px;color:var(--muted)}
   .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
   table{width:100%;border-collapse:collapse;font-size:11.5px;font-variant-numeric:tabular-nums}
@@ -236,7 +236,8 @@ const plateL = -0.18, plateR = 0.18;
 
 let C = new Float64Array(N), Ct = new Float64Array(N);
 let EL = new Float64Array(N), ET = new Float64Array(N), Bz = new Float64Array(N);
-let t = 0, dt = 2.2e-10, running = true, accP = 0, accE = 0;
+let t = 0, running = true, accP = 0, accE = 0;
+const dt = 0.4 * dx / c0; // CFL-stable for 1-D wave update
 
 const $ = id => document.getElementById(id);
 function fmt(x, d=3){
@@ -252,8 +253,8 @@ function srcProfile(eta){
   const s = new Float64Array(N);
   for (let i=0;i<N;i++){
     const x = xs[i];
-    const left = Math.exp(-((x-plateL)/0.06)**2);
-    const right= Math.exp(-((x-plateR)/0.06)**2);
+    const left = Math.exp(-(((x-plateL)/0.06)**2));
+    const right= Math.exp(-(((x-plateR)/0.06)**2));
     s[i] = (1+eta)*left - (1-eta)*right;
   }
   return s;
@@ -278,7 +279,10 @@ function step(){
 
   // QED3 hypothesized source: three-charge vertex ~ α^{3/2} κ Γ η E0 ω
   // Continuity leak S = ∂tρ+∇·J  →  □C = −μ0 S
-  const qed3 = kap * G * Math.pow(ALPHA, 1.5) * (eps0*E0) * omega; // C/m³ /s scaled
+  // DEMO_SCALE: raw α^{3/2} SI source is tiny on the canvas; amplify so default
+  // Mixed mode shows a readable C/SLW wave. Bookkeeping ratios stay; κ still scales this.
+  const DEMO_SCALE = 120;
+  const qed3 = DEMO_SCALE * kap * G * Math.pow(ALPHA, 1.5) * (eps0*E0) * omega;
   const drive = Math.sin(omega*t);
   const Scont = new Float64Array(N); // ∂tρ + div J
   for (let i=0;i<N;i++){
@@ -304,6 +308,10 @@ function step(){
     }
     // absorbing ends
     C[0]*=0.92; C[N-1]*=0.92; Ct[0]*=0.92; Ct[N-1]*=0.92;
+    for (let i=0;i<N;i++){
+      if (!isFinite(C[i])) C[i]=0;
+      if (!isFinite(Ct[i])) Ct[i]=0;
+    }
   } else {
     C.fill(0); Ct.fill(0);
   }
@@ -336,7 +344,7 @@ function step(){
   if (allowTEM){
     const tramp = 0.04*eta*E0*Math.cos(omega*t);
     for (let i=0;i<N;i++){
-      const env = Math.exp(-((Math.abs(xs[i])-0.7)/0.25)**2);
+      const env = Math.exp(-(((Math.abs(xs[i])-0.7)/0.25)**2));
       Bz[i] = tramp*env/c0;
       ET[i] = tramp*env;
     }
@@ -489,12 +497,8 @@ function draw(EL, ET, C, Bz, ETEM, ESLW, Scont, eta){
 
 ["eta","volt","gamma","w","sig","kappa"].forEach(id=>{
   $(id).addEventListener("input", ()=>{
-    $("vEta").textContent = (+$("eta").value).toFixed(2);
-    $("vV").textContent = (+$("volt").value).toFixed(1);
-    $("vG").textContent = (+$("gamma").value).toFixed(2);
-    $("vW").textContent = (+$("w").value).toFixed(2);
-    $("vS").textContent = (+$("sig").value).toFixed(2);
-    $("vK").textContent = (+$("kappa").value).toFixed(2);
+    syncLabels();
+    if (!running) step();
   });
 });
 $("btnRun").onclick = ()=>{ running=!running; $("btnRun").textContent = running?"Pause":"Run"; };
@@ -502,17 +506,29 @@ $("btnReset").onclick = ()=>{
   C.fill(0); Ct.fill(0); EL.fill(0); ET.fill(0); Bz.fill(0); t=0; accP=0;
 };
 ["eta","volt","gamma","w","sig","kappa","mode"].forEach(id=>{
-  $(id).addEventListener("change", ()=>{ C.fill(0); Ct.fill(0); accP=0; t=0; });
+  $(id).addEventListener("change", ()=>{
+    C.fill(0); Ct.fill(0); EL.fill(0); ET.fill(0); Bz.fill(0); accP=0; t=0;
+    step();
+  });
 });
 
+function syncLabels(){
+  $("vEta").textContent = (+$("eta").value).toFixed(2);
+  $("vV").textContent = (+$("volt").value).toFixed(1);
+  $("vG").textContent = (+$("gamma").value).toFixed(2);
+  $("vW").textContent = (+$("w").value).toFixed(2);
+  $("vS").textContent = (+$("sig").value).toFixed(2);
+  $("vK").textContent = (+$("kappa").value).toFixed(2);
+}
 function loop(){
   if (running){
-    for (let k=0;k<4;k++) step();
+    for (let k=0;k<24;k++) step();
   }
   requestAnimationFrame(loop);
 }
-// init labels
-$("vEta").textContent = "0.55";
+// init: labels + one physics step so the canvas is not blank before rAF
+syncLabels();
+step();
 loop();
 </script>
 </body>
