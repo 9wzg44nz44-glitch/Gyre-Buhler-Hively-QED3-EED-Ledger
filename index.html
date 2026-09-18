@@ -142,7 +142,8 @@
   <div class="mini-demo">
     <h2>Tiny contrast · Isolated · 600 V · PS removed</h2>
     <p style="margin:0;color:var(--muted);font-size:13.5px;max-width:68ch">
-      One control. Tunneling on keeps a tiny leak (toy σ); tunneling off is the classical null.
+      <b style="color:var(--ink)">What to do:</b> use the big button below to turn <b>quantum tunneling</b> on or off.
+      On = tiny leak (toy σ) may leave residual F_net. Off = classical null (F_net → 0).
       Numbers are educational bookkeeping, not a lab measurement.
     </p>
     <div class="mini-hero">
@@ -151,7 +152,10 @@
       <div class="dir" id="fDir">Tunneling ON · residual F_net possible via g<sub>SLW</sub> = ε₀ C E recoil (HYP)</div>
     </div>
     <div class="mini-ctrl">
-      <button type="button" class="toggle on" id="btnTunnel" aria-pressed="true">Tunneling: ON</button>
+      <p id="tunnelHint" style="margin:0 0 6px;width:100%;font-size:14px;font-weight:600;color:var(--eed)">
+        Click here ↓ to turn quantum tunneling OFF (compare the classical null)
+      </p>
+      <button type="button" class="toggle on" id="btnTunnel" aria-pressed="true">Click here: Quantum tunneling is ON — click to turn OFF</button>
       <span style="font-size:12px;color:var(--muted)">Locked: Isolated · 600 V DC · PS removed · asymmetry fixed</span>
     </div>
   </div>
@@ -214,17 +218,20 @@
   var btn = document.getElementById("btnTunnel");
   var fNet = document.getElementById("fNet");
   var fDir = document.getElementById("fDir");
+  var hint = document.getElementById("tunnelHint");
   function paint(){
     if (on) {
-      btn.textContent = "Tunneling: ON";
+      btn.textContent = "Click here: Quantum tunneling is ON — click to turn OFF";
       btn.className = "toggle on";
       btn.setAttribute("aria-pressed", "true");
+      if (hint) hint.textContent = "Click here ↓ to turn quantum tunneling OFF (compare the classical null)";
       fNet.textContent = "≈ 0.42";
       fDir.innerHTML = "Tunneling ON · residual F_net possible via g<sub>SLW</sub> = ε₀ C E recoil (HYP)";
     } else {
-      btn.textContent = "Tunneling: OFF (null)";
+      btn.textContent = "Click here: Quantum tunneling is OFF — click to turn ON";
       btn.className = "toggle off";
       btn.setAttribute("aria-pressed", "false");
+      if (hint) hint.textContent = "Click here ↓ to turn quantum tunneling ON (hypothesized leak / possible F_net)";
       fNet.textContent = "≈ 0.00";
       fDir.textContent = "Classical null · σ = 0 · static + J = 0 ⇒ no SLW ⇒ F_net → 0";
     }
