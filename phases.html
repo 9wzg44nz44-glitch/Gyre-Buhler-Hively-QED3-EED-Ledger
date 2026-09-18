@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<title>Capacitor phases · GYRE Ledger · QED³ ↔ EED</title>
+<meta name="description" content="Simple phase walker for Dr. Buhler’s asymmetric capacitor: Off → Charge → Hold → Isolated. Exact vs HYP SLW participation under Hively EED."/>
+<style>
+  :root{
+    --bg:#0b1020; --bg2:#0f1528; --panel:#141a2e; --ink:#e8eefc; --muted:#8b97b8;
+    --line:#243056; --ced:#7aa2ff; --eed:#3ee0b8; --qed:#ffb14a;
+    --slw:#5eead4; --sw:#c4b5fd; --tem:#60a5fa; --warn:#fb7185;
+    --ok:#34d399; --plate:#94a3b8;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+  .sticky{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);background:rgba(11,16,32,.92);border-bottom:1px solid var(--line)}
+  .sticky-inner{max-width:1100px;margin:0 auto;padding:.65rem 16px;display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:center;justify-content:space-between}
+  .brand{font-size:14px;letter-spacing:.02em;color:var(--ink);text-decoration:none;font-weight:600}
+  .brand span{color:var(--eed)}
+  .nav{display:flex;flex-wrap:wrap;gap:.45rem .8rem;font-size:12px}
+  .nav a{color:var(--muted);text-decoration:none}
+  .nav a:hover,.nav a.active{color:var(--ink)}
+  .nav a.active{color:var(--eed)}
+  header{padding:14px 16px 8px;border-bottom:1px solid var(--line)}
+  header h1{margin:0;font-size:17px;letter-spacing:.02em}
+  header p{margin:4px 0 0;color:var(--muted);font-size:12px}
+  .banner{margin:10px 16px 0;padding:8px 10px;border:1px solid #5b3b16;background:#1a140c;color:#fbbf24;font-size:12px;border-radius:8px;line-height:1.5}
+  .banner b{color:#fde68a}
+  .wrap{display:grid;grid-template-columns:1fr;gap:10px;padding:10px 12px 24px;max-width:1100px;margin:0 auto}
+  @media(min-width:980px){.wrap{grid-template-columns:340px 1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+  .card h2{margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  .card p,.card li{color:var(--muted);font-size:13px}
+  label{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:7px 0;font-size:12px;color:var(--muted)}
+  label span.v{color:var(--ink);font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
+  input[type=range]{width:100%;accent-color:var(--eed)}
+  button{background:#0f1528;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 10px;cursor:pointer;font-size:12px}
+  button.primary{background:#12352e;border-color:#2a6b5c;color:var(--eed);font-weight:600}
+  button.phase{flex:1;min-width:72px;padding:10px 8px;font-weight:600}
+  button.phase.on{background:#12352e;border-color:#2a6b5c;color:var(--eed);box-shadow:0 0 0 1px #2a6b5c inset}
+  button.phase:disabled{opacity:.45;cursor:default}
+  .phases{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px}
+  .row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  canvas{width:100%;height:auto;aspect-ratio:900/300;background:#070b16;border-radius:8px;border:1px solid var(--line);display:block}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 12px;margin-top:6px;font-size:11px;color:var(--muted)}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  @media(max-width:640px){.grid3{grid-template-columns:1fr 1fr}}
+  .kpi{background:#0f1528;border:1px solid var(--line);border-radius:8px;padding:8px}
+  .kpi b{display:block;font-size:15px;font-variant-numeric:tabular-nums}
+  .kpi span{color:var(--muted);font-size:11px}
+  .tag{display:inline-block;font-size:10px;padding:1px 6px;border-radius:999px;border:1px solid var(--line);color:var(--muted);vertical-align:middle}
+  .tag.hyp{border-color:#7c4a12;color:#fbbf24}
+  .tag.ex{border-color:#14532d;color:#86efac}
+  .timeline{height:10px;background:#0f1528;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin:8px 0 4px}
+  .timeline > i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2a6b5c,var(--eed));border-radius:999px}
+  .tl-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:8px}
+  .answer{border:1px solid #5b3b16;background:#1a140c;border-radius:10px;padding:12px 14px;margin:0 0 12px}
+  .answer h2{color:#fbbf24;margin:0 0 6px}
+  .answer p{color:#fde68a;margin:0;font-size:13.5px;line-height:1.55}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th,td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+  .full{max-width:1100px;margin:0 auto;padding:0 12px 24px}
+  footer{color:var(--muted);font-size:11px;padding:0 16px 20px;max-width:1100px;margin:0 auto}
+  footer a{color:var(--eed)}
+  .note{font-size:12px;color:var(--muted);margin:6px 0 0}
+  ul.clean{margin:.35rem 0;padding-left:1.15rem}
+  ul.clean li{margin:.3rem 0}
+</style>
+</head>
+<body>
+<div class="sticky"><div class="sticky-inner">
+  <a class="brand" href="index.html">GYRE Ledger <span>·</span> QED³ ↔ EED</a>
+  <nav class="nav">
+    <a href="index.html">Home</a>
+    <a href="ledger.html">Ledger</a>
+    <a class="active" href="phases.html">Phases</a>
+    <a href="notes.html">Notes</a>
+    <a href="library.html">Library</a>
+    <a href="status.html">Status</a>
+  </nav>
+</div></div>
+
+<header>
+  <h1>Capacitor phases · Off → Charge → Hold → Isolated</h1>
+  <p>A simpler walker for Dr. Buhler’s asymmetric capacitor. Few sliders. Warm skepticism. Exact vs <span class="tag hyp">HYP</span> SLW participation under Hively EED.</p>
+</header>
+
+<div class="banner">
+  <b>Educational toy — not a derivation of Exodus thrust.</b>
+  SI: g_SLW = ε₀ C E; □C = −μ₀(∂tρ+∇·J); TEM C=0; SLW B=0, E∥k, C≠0; SW energy only.
+  Charging (∂tρ ≠ 0) is the least-speculative EED participation; “static after supply removed” needs a continuity remainder to launch SLW — tagged <b>HYP</b>.
+</div>
+
+<div class="wrap">
+  <div>
+    <div class="card">
+      <h2>Phase</h2>
+      <div class="phases" id="phaseBtns">
+        <button class="phase on" data-phase="off" type="button">Off</button>
+        <button class="phase" data-phase="charge" type="button">Charge</button>
+        <button class="phase" data-phase="hold" type="button">Hold</button>
+        <button class="phase" data-phase="isolated" type="button">Isolated</button>
+      </div>
+      <div class="timeline"><i id="tlBar"></i></div>
+      <div class="tl-labels"><span>Off</span><span>Charge</span><span>Hold</span><span>Isolated</span></div>
+      <div class="row">
+        <button class="primary" id="btnRun" type="button">Pause</button>
+        <button id="btnReset" type="button">Reset</button>
+        <button id="btnDemo" type="button">Run demo sequence</button>
+      </div>
+      <p class="note" id="phaseHint">No power · Q≈0 · TEM empty · no SLW source.</p>
+    </div>
+
+    <div class="card" style="margin-top:10px">
+      <h2>Controls (≤4)</h2>
+      <label>Asymmetry η <span class="v" id="vEta">0.55</span></label>
+      <input id="eta" type="range" min="0" max="1" step="0.01" value="0.55"/>
+      <label>Target plate voltage (kV) <span class="v" id="vV">12.0</span></label>
+      <input id="volt" type="range" min="0.2" max="40" step="0.1" value="12"/>
+      <label>Tunneling / leakage λ <span class="tag hyp">HYP</span> <span class="v" id="vLam">0.12</span></label>
+      <input id="lam" type="range" min="0" max="1" step="0.01" value="0.12"/>
+      <label>SLW coupling Γ <span class="tag hyp">HYP</span> <span class="v" id="vGam">0.35</span></label>
+      <input id="gamma" type="range" min="0" max="1" step="0.01" value="0.35"/>
+      <p class="note">λ models bound-charge tunneling / continuity leak after isolation. Γ scales how strongly a continuity remainder sources C (□C = −μ₀ S).</p>
+    </div>
+
+    <div class="card" style="margin-top:10px">
+      <h2>KPIs</h2>
+      <div class="grid2">
+        <div class="kpi"><span>Phase</span><b id="kPhase">Off</b></div>
+        <div class="kpi"><span>Q / Q_max</span><b id="kQ">0.00</b></div>
+        <div class="kpi"><span>V plates (kV)</span><b id="kVolt">0.00</b></div>
+        <div class="kpi"><span>P_mat + P_field</span><b id="kP">0</b></div>
+        <div class="kpi"><span>F_net (μN scale)</span><b id="kF">0</b></div>
+        <div class="kpi"><span>SLW out (μW scale)</span><b id="kW">0</b></div>
+        <div class="kpi"><span>|C| peak</span><b id="kC">0</b></div>
+        <div class="kpi"><span>Continuity S</span><b id="kS">0</b></div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="card">
+      <h2>1-D plates · E · C · continuity source</h2>
+      <canvas id="cv" width="900" height="300"></canvas>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--plate)"></i>plates</span>
+        <span><i class="dot" style="background:var(--tem)"></i>E (TEM bias)</span>
+        <span><i class="dot" style="background:var(--slw)"></i>C / E_SLW</span>
+        <span><i class="dot" style="background:var(--qed)"></i>S = ∂tρ+∇·J</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="full">
+  <div class="answer">
+    <h2>Can SLW launch after the supply is removed?</h2>
+    <p>
+      <b>Classically: no</b>, if the fields are truly static and continuity holds with J=0 — then ∂tρ+∇·J = 0, □C has no source, TEM electrostatics alone (C=0), and there is <b>no SLW launch</b>.
+      Residual SLW / force after isolation requires a continuity remainder: slow leakage/tunneling, bound-charge rearrangement on asymmetric faces, or a mapped α^{3/2} vacuum-momentum story — all <span class="tag hyp">HYP</span>.
+      Dan’s tunneling suggestion is treated as an open hypothesis, not a proof.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>What this toy shows / does not show</h2>
+    <ul class="clean">
+      <li><b>Shows:</b> RC-like charge build, hold with supply connected, and an isolated bound-charge regime with optional slow leak λ.</li>
+      <li><b>Shows:</b> When ∂tρ ≠ 0 (charging), classical continuity can source □C even in CED-adjacent bookkeeping — the least-speculative educational SLW participation.</li>
+      <li><b>Does not show:</b> a derivation of Exodus thrust, closed Buhler amplitudes, or a proof that tunneling produces net force.</li>
+      <li><b>Does not show:</b> laboratory μN measurements — F_net and SLW power are educational scales on a 1-D canvas.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Phase-by-phase · EED / SLW participation</h2>
+    <table>
+      <thead>
+        <tr><th>Phase</th><th>What happens</th><th>SLW / C participation</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>Off</b></td>
+          <td>No supply · Q≈0 · E≈0</td>
+          <td>No source · C stays near 0</td>
+          <td><span class="tag ex">exact</span></td>
+        </tr>
+        <tr>
+          <td><b>Charge</b></td>
+          <td>Supply on · Q builds (RC-like) · ∂tρ ≠ 0</td>
+          <td>Classical continuity can source □C; SLW launch during dQ/dt is the least speculative EED participation (still a toy map)</td>
+          <td><span class="tag ex">exact-ish</span> continuity · map to thrust <span class="tag hyp">HYP</span></td>
+        </tr>
+        <tr>
+          <td><b>Hold</b></td>
+          <td>Supply connected · Q≈Qmax · ideally DC steady</td>
+          <td>If truly ∂tρ=∇·J=0 → no new C radiation. Residual SLW needs AC ripple, corona, tunneling steady current, or 3rd-order QED remainder</td>
+          <td><span class="tag hyp">HYP</span> residual</td>
+        </tr>
+        <tr>
+          <td><b>Isolated</b></td>
+          <td>Supply removed · Q held by bound charge / slow leak</td>
+          <td>Classically electrostatic TEM only → <b>no SLW</b> if static. Possible leftovers: (a) λ leak ⇒ small persistent S, (b) bound-charge rearrange on asymmetric faces, (c) α^{3/2} vacuum-momentum ↔ g_SLW</td>
+          <td><span class="tag hyp">HYP</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Warm skepticism</h2>
+    <p style="margin:0">
+      Buhler’s public talks describe continuing thrust with asymmetric capacitors; the math is not closed.
+      Mapping that story onto Hively’s □C and g_SLW = ε₀ C E is a research instrument, not an identity.
+      Treat tunneling / leakage λ and coupling Γ as knobs that make the hypothesis visible — dialing them up does not prove the hypothesis.
+      Prefer the denser bookkeeping on the full ledger when you want term-by-term residuals.
+    </p>
+    <p class="note" style="margin-top:10px">
+      <a class="btn" href="ledger.html" style="display:inline-block;padding:8px 14px;border-radius:8px;background:#12352e;border:1px solid #2a6b5c;color:var(--eed);text-decoration:none;font-weight:600">Open full ledger.html</a>
+      — denser instrument with energy &amp; momentum tables.
+    </p>
+  </div>
+</div>
+
+<footer>
+  Dan Britton · BrittonSolutions@icloud.com · educational.<br/>
+  Research instrument only — not a derivation of Exodus thrust · not peer-reviewed · not an endorsement of any vendor or claim.<br/>
+  <a href="index.html">Home</a> · <a href="ledger.html">Ledger</a> · <a href="phases.html">Phases</a> · <a href="notes.html">Notes</a> · <a href="library.html">Library</a> · <a href="status.html">Status</a>
+</footer>
+
+<script>
+(function(){
+  const c0 = 2.99792458e8, mu0 = 4*Math.PI*1e-7, eps0 = 1/(mu0*c0*c0);
+  const N = 200, L = 2.0, dx = (2*L)/(N-1);
+  const xs = Float64Array.from({length:N}, (_,i)=> -L + i*dx);
+  const plateL = -0.18, plateR = 0.18;
+  const RC_TAU = 0.35; // demo seconds for charge build (wall-clock mapped)
+  const HOLD_TIME = 1.4;
+  const DEMO_PHASES = ["off","charge","hold","isolated"];
+
+  let C = new Float64Array(N), Ct = new Float64Array(N);
+  let EL = new Float64Array(N);
+  let t = 0, running = true, demo = false;
+  let phase = "off";
+  let Q = 0, Qmax = 1;
+  let phaseT = 0; // time in current phase (demo clock)
+  let accP = 0;
+  const dt = 0.4 * dx / c0;
+
+  const $ = id => document.getElementById(id);
+  function fmt(x, d=3){
+    if (!isFinite(x)) return "—";
+    const a = Math.abs(x);
+    if (a !== 0 && (a < 1e-3 || a >= 1e4)) return x.toExponential(d);
+    return x.toFixed(d);
+  }
+  function sanitize(arr){
+    for (let i=0;i<arr.length;i++) if (!isFinite(arr[i])) arr[i]=0;
+  }
+
+  function srcProfile(eta){
+    const s = new Float64Array(N);
+    for (let i=0;i<N;i++){
+      const x = xs[i];
+      const left = Math.exp(-(((x-plateL)/0.06)**2));
+      const right= Math.exp(-(((x-plateR)/0.06)**2));
+      s[i] = (1+eta)*left - (1-eta)*right;
+    }
+    return s;
+  }
+
+  const HINTS = {
+    off: "No power · Q≈0 · TEM empty · no SLW source.",
+    charge: "Supply on · Q builds · ∂tρ ≠ 0 → classical continuity can source □C (least speculative SLW participation).",
+    hold: "Supply connected · Q≈Qmax. Ideal DC ⇒ no new C. Residual SLW needs ripple / corona / tunnel / QED³ — HYP.",
+    isolated: "Supply removed. Classically static TEM only → no SLW. Leak λ or α^{3/2} remainder → HYP residual."
+  };
+
+  function setPhase(p, fromDemo){
+    if (DEMO_PHASES.indexOf(p) < 0) return;
+    phase = p;
+    phaseT = 0;
+    if (!fromDemo) demo = false;
+    document.querySelectorAll(".phase").forEach(b=>{
+      b.classList.toggle("on", b.getAttribute("data-phase")===phase);
+    });
+    $("phaseHint").textContent = HINTS[phase];
+    $("kPhase").textContent = phase.charAt(0).toUpperCase()+phase.slice(1);
+    updateTimeline();
+  }
+
+  function updateTimeline(){
+    const idx = DEMO_PHASES.indexOf(phase);
+    let frac = idx / (DEMO_PHASES.length-1);
+    if (phase === "charge") frac = (1 + Math.min(1, Q/Math.max(1e-9,Qmax))) / 3;
+    else if (phase === "hold") frac = (2 + Math.min(1, phaseT/HOLD_TIME)) / 3;
+    else if (phase === "isolated") frac = 1;
+    else if (phase === "off") frac = 0;
+    $("tlBar").style.width = (100*frac).toFixed(1) + "%";
+  }
+
+  function syncLabels(){
+    $("vEta").textContent = (+$("eta").value).toFixed(2);
+    $("vV").textContent = (+$("volt").value).toFixed(1);
+    $("vLam").textContent = (+$("lam").value).toFixed(2);
+    $("vGam").textContent = (+$("gamma").value).toFixed(2);
+  }
+
+  function step(wallDt){
+    const eta = +$("eta").value;
+    const Vtarget = +$("volt").value * 1e3;
+    const lam = +$("lam").value;
+    const Gam = +$("gamma").value;
+    const gap = plateR - plateL;
+    Qmax = Math.max(1e-12, eps0 * (Vtarget/gap) * gap); // educational Q scale ~ ε₀ E₀ · gap
+    // Use wall-clock for RC / demo pacing; physics wave uses CFL dt
+    const wdt = Math.min(0.05, Math.max(0.001, wallDt || 0.016));
+
+    // --- Charge dynamics by phase ---
+    let dQdt = 0;
+    if (phase === "off"){
+      Q += (0 - Q) * (1 - Math.exp(-wdt / 0.08));
+      if (Q < 1e-6 * Qmax) Q = 0;
+    } else if (phase === "charge"){
+      // RC-like approach to Qmax
+      const k = 1 - Math.exp(-wdt / RC_TAU);
+      const Qnew = Q + (Qmax - Q) * k;
+      dQdt = (Qnew - Q) / Math.max(1e-9, wdt);
+      Q = Qnew;
+      if (demo && Q > 0.98 * Qmax){ setPhase("hold", true); }
+    } else if (phase === "hold"){
+      Q += (Qmax - Q) * (1 - Math.exp(-wdt / 0.12));
+      // tiny supply ripple (HYP pathway for residual S)
+      dQdt = 0.02 * Qmax * Math.sin(2*Math.PI*8*t) * Gam;
+      phaseT += wdt;
+      if (demo && phaseT > HOLD_TIME){ setPhase("isolated", true); }
+    } else if (phase === "isolated"){
+      // slow leak / tunneling λ (HYP)
+      const leak = lam * 0.35; // 1/s scale educational
+      dQdt = -leak * Q;
+      Q = Math.max(0, Q + dQdt * wdt);
+      phaseT += wdt;
+    }
+
+    const Vnow = (Q / Qmax) * Vtarget;
+    const E0 = Vnow / gap;
+    const prof = srcProfile(eta);
+
+    // Continuity remainder S = ∂tρ + ∇·J (educational)
+    // Charge: classical ∂tρ from dQ/dt
+    // Hold: HYP ripple / Γ
+    // Isolated: HYP λ leak + optional bound rearrange
+    const Scont = new Float64Array(N);
+    const DEMO_SCALE = 90;
+    let Samp = 0;
+    if (phase === "charge"){
+      Samp = DEMO_SCALE * Gam * (dQdt / Math.max(1e-12, Qmax)) * (eps0 * Math.max(E0, 1));
+    } else if (phase === "hold"){
+      // HYP residual
+      Samp = DEMO_SCALE * 0.15 * Gam * (0.02 + 0.08*lam) * (eps0 * Math.max(E0, 1)) * Math.sin(2*Math.PI*8*t);
+    } else if (phase === "isolated"){
+      // HYP: leak-driven S + weak bound rearrange on asymmetric faces
+      const leakS = Math.abs(dQdt) / Math.max(1e-12, Qmax);
+      Samp = DEMO_SCALE * Gam * (leakS + 0.04*lam*eta*(Q/Qmax)) * (eps0 * Math.max(E0, 1));
+    }
+
+    for (let i=0;i<N;i++){
+      Scont[i] = Samp * prof[i];
+    }
+
+    // Wave update for C (several CFL substeps per frame)
+    const sub = 18;
+    for (let s=0;s<sub;s++){
+      const Cxx = new Float64Array(N);
+      for (let i=1;i<N-1;i++) Cxx[i] = (C[i+1]-2*C[i]+C[i-1])/(dx*dx);
+      for (let i=1;i<N-1;i++){
+        const acc = c0*c0*Cxx[i] + c0*c0*mu0*Scont[i];
+        Ct[i] += acc*dt;
+        C[i] += Ct[i]*dt;
+      }
+      C[0]*=0.92; C[N-1]*=0.92; Ct[0]*=0.92; Ct[N-1]*=0.92;
+      t += dt;
+    }
+    sanitize(C); sanitize(Ct);
+
+    // E_TEM bias in gap + E_SLW from ∂x E ≈ −∂t C
+    const ESLW = new Float64Array(N);
+    let run = 0; ESLW[0]=0;
+    for (let i=1;i<N;i++){
+      run += -0.5*(Ct[i]+Ct[i-1])*dx;
+      ESLW[i] = run;
+    }
+    let m=0; for (let i=0;i<N;i++) m+=ESLW[i]; m/=N;
+    for (let i=0;i<N;i++) ESLW[i]-=m;
+
+    const Estat = new Float64Array(N);
+    for (let i=0;i<N;i++){
+      const x = xs[i];
+      if (x>plateL && x<plateR) Estat[i] = E0*(1 + 0.65*eta*Math.tanh(12*(x)));
+      else Estat[i] = 0;
+      EL[i] = Estat[i] + ESLW[i];
+    }
+
+    // Momentum / force educational KPIs
+    let g_slw=0, f_JC=0, f_press=0, f_lor=0, maxC=0, maxS=0;
+    let fluxL=0, fluxR=0;
+    for (let i=1;i<N-1;i++){
+      const Sslw = C[i]*EL[i]/mu0;
+      const gSLW = Sslw/(c0*c0);
+      const onPlate = (Math.abs(xs[i]-plateL)<0.03)||(Math.abs(xs[i]-plateR)<0.03);
+      const Jx = onPlate ? (eps0 * dQdt / Math.max(1e-12,Qmax) * E0 * 0.2 * prof[i]) : 0;
+      const rho = eps0*((EL[i+1]-EL[i-1])/(2*dx) + Ct[i]);
+      const dC = (C[i+1]-C[i-1])/(2*dx);
+      g_slw += gSLW*dx;
+      f_JC += Jx*C[i]*dx;
+      f_press += -(C[i]*dC)/mu0 * dx;
+      f_lor += rho*EL[i]*dx;
+      if (Math.abs(C[i])>maxC) maxC=Math.abs(C[i]);
+      if (Math.abs(Scont[i])>maxS) maxS=Math.abs(Scont[i]);
+    }
+    fluxL = (C[2]*EL[2])/mu0;
+    fluxR = (C[N-3]*EL[N-3])/mu0;
+    const Fnet = f_lor + f_JC + f_press;
+    accP += Fnet * wdt;
+    const Ptot = accP + g_slw;
+
+    $("kQ").textContent = fmt(Q/Qmax, 3);
+    $("kVolt").textContent = fmt(Vnow/1e3, 2);
+    $("kP").textContent = fmt(Ptot, 3);
+    $("kP").style.color = Math.abs(Ptot) < Math.max(1e-10, 0.15*(Math.abs(accP)+Math.abs(g_slw))) ? "var(--ok)" : "var(--warn)";
+    $("kF").textContent = fmt(Fnet*1e6, 3);
+    $("kW").textContent = fmt((Math.abs(fluxL)+Math.abs(fluxR))*1e6, 3);
+    $("kC").textContent = fmt(maxC, 3);
+    $("kS").textContent = fmt(maxS, 3);
+    updateTimeline();
+    draw(EL, Estat, ESLW, C, Scont, eta, E0);
+  }
+
+  function draw(EL, Estat, ESLW, C, Scont, eta, E0){
+    const cv=$("cv"), ctx=cv.getContext("2d");
+    const W=cv.width, H=cv.height;
+    ctx.clearRect(0,0,W,H);
+    const xpix = x => (x+L)/(2*L)*W;
+    const mid = H*0.58;
+    ctx.strokeStyle="#243056"; ctx.beginPath(); ctx.moveTo(0,mid); ctx.lineTo(W,mid); ctx.stroke();
+
+    // plates — height encodes asymmetry
+    ctx.fillStyle="#94a3b8";
+    const ph=40+50*eta;
+    ctx.fillRect(xpix(plateL)-3, mid-ph, 6, ph*2);
+    ctx.fillRect(xpix(plateR)-3, mid-(ph*0.55), 6, ph*1.1);
+    ctx.fillStyle="#8b97b8"; ctx.font="11px sans-serif";
+    ctx.fillText("−", xpix(plateL)-10, mid-ph-6);
+    ctx.fillText("+", xpix(plateR)+8, mid-ph*0.55-6);
+
+    // charge bar between plates
+    const qFrac = Math.min(1, Math.max(0, Q/Math.max(1e-12,Qmax)));
+    ctx.fillStyle="rgba(96,165,250,0.15)";
+    ctx.fillRect(xpix(plateL)+4, mid-18, (xpix(plateR)-xpix(plateL)-8)*qFrac, 36);
+
+    function plot(arr, color, scale, y0){
+      ctx.beginPath(); ctx.strokeStyle=color; ctx.lineWidth=1.6;
+      for (let i=0;i<N;i++){
+        const px=xpix(xs[i]), py=y0 - arr[i]*scale;
+        if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+      }
+      ctx.stroke();
+    }
+    const maxC = Math.max(1e-12, ...C.map(Math.abs));
+    const maxE = Math.max(1e-12, ...EL.map(Math.abs), 1);
+    const maxS = Math.max(1e-12, ...Scont.map(Math.abs));
+    plot(Scont, "#ffb14a", 48/maxS, 40);
+    plot(C, "#5eead4", 68/maxC, mid);
+    plot(Estat, "#60a5fa", 42/maxE, mid);
+    plot(ESLW, "#7dd3fc", 42/Math.max(1e-12,...ESLW.map(Math.abs)), mid);
+
+    ctx.fillStyle="#ffb14a"; ctx.fillText("S = ∂tρ+∇·J  (continuity)", 10, 18);
+    ctx.fillStyle="#5eead4"; ctx.fillText("C", 10, mid-90);
+    ctx.fillStyle="#60a5fa"; ctx.fillText("E_TEM", 40, mid-90);
+    ctx.fillStyle="#7dd3fc"; ctx.fillText("E_SLW", 100, mid-90);
+    ctx.fillStyle="#8b97b8";
+    ctx.fillText("phase: "+phase+" · η="+eta.toFixed(2)+" · E₀≈"+fmt(E0,1)+" V/m", 200, mid-90);
+  }
+
+  document.querySelectorAll(".phase").forEach(b=>{
+    b.addEventListener("click", ()=> setPhase(b.getAttribute("data-phase"), false));
+  });
+  ["eta","volt","lam","gamma"].forEach(id=>{
+    $(id).addEventListener("input", ()=>{
+      syncLabels();
+      if (!running) step(0.016);
+    });
+  });
+  $("btnRun").onclick = ()=>{
+    running = !running;
+    $("btnRun").textContent = running ? "Pause" : "Run";
+  };
+  $("btnReset").onclick = ()=>{
+    C.fill(0); Ct.fill(0); EL.fill(0); t=0; accP=0; Q=0; demo=false; phaseT=0;
+    setPhase("off", false);
+    step(0.016);
+  };
+  $("btnDemo").onclick = ()=>{
+    C.fill(0); Ct.fill(0); EL.fill(0); t=0; accP=0; Q=0; phaseT=0;
+    demo = true; running = true;
+    $("btnRun").textContent = "Pause";
+    setPhase("charge", true);
+  };
+
+  let last = performance.now();
+  function loop(now){
+    const wallDt = Math.min(0.05, (now - last)/1000);
+    last = now;
+    if (running) step(wallDt);
+    requestAnimationFrame(loop);
+  }
+  syncLabels();
+  setPhase("off", false);
+  // Seed a tiny charge step so first painted frame after leaving Off is viewable;
+  // also paint once in Off so canvas is not blank.
+  step(0.016);
+  // Auto-start a gentle demo so graph is viewable after first step without blank canvas
+  demo = true; running = true;
+  setPhase("charge", true);
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
