@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<title>GYRE Ledger — Buhler QED³ ↔ Hively EED</title>
+<style>
+  :root{
+    --bg:#0b1020; --panel:#141a2e; --ink:#e8eefc; --muted:#8b97b8;
+    --line:#243056; --ced:#7aa2ff; --eed:#3ee0b8; --qed:#ffb14a;
+    --slw:#5eead4; --sw:#c4b5fd; --tem:#60a5fa; --warn:#fb7185;
+    --ok:#34d399; --plate:#94a3b8;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+  header{padding:14px 16px 8px;border-bottom:1px solid var(--line)}
+  header h1{margin:0;font-size:17px;letter-spacing:.02em}
+  header p{margin:4px 0 0;color:var(--muted);font-size:12px}
+  .banner{margin:10px 16px 0;padding:8px 10px;border:1px solid #5b3b16;background:#1a140c;color:#fbbf24;font-size:12px;border-radius:8px}
+  .wrap{display:grid;grid-template-columns:1fr;gap:10px;padding:10px 12px 24px}
+  @media(min-width:980px){.wrap{grid-template-columns:360px 1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+  .card h2{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  label{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:7px 0;font-size:12px;color:var(--muted)}
+  label span.v{color:var(--ink);font-variant-numeric:tabular-nums;min-width:72px;text-align:right}
+  input[type=range]{width:100%;accent-color:var(--eed)}
+  select,button{background:#0f1528;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 8px}
+  button{cursor:pointer}
+  button.primary{background:#12352e;border-color:#2a6b5c;color:var(--eed)}
+  canvas{width:100%;height:220px;background:#070b16;border-radius:8px;border:1px solid var(--line)}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 12px;margin-top:6px;font-size:11px;color:var(--muted)}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+  table{width:100%;border-collapse:collapse;font-size:11.5px;font-variant-numeric:tabular-nums}
+  th,td{padding:5px 4px;border-bottom:1px solid var(--line);text-align:right}
+  th:first-child,td:first-child{text-align:left}
+  th{color:var(--muted);font-weight:600}
+  .pos{color:var(--ok)} .neg{color:var(--warn)} .zero{color:var(--muted)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .kpi{background:#0f1528;border:1px solid var(--line);border-radius:8px;padding:8px}
+  .kpi b{display:block;font-size:16px;font-variant-numeric:tabular-nums}
+  .kpi span{color:var(--muted);font-size:11px}
+  .dict td{text-align:left;vertical-align:top}
+  .tag{display:inline-block;font-size:10px;padding:1px 6px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+  .tag.hyp{border-color:#7c4a12;color:#fbbf24}
+  .tag.ex{border-color:#14532d;color:#86efac}
+  footer{color:var(--muted);font-size:11px;padding:0 16px 20px}
+
+  .sticky{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);background:rgba(11,16,32,.92);border-bottom:1px solid var(--line)}
+  .sticky-inner{max-width:1100px;margin:0 auto;padding:.65rem 16px;display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:center;justify-content:space-between}
+  .brand{font-size:14px;letter-spacing:.02em;color:var(--ink);text-decoration:none;font-weight:600}
+  .brand span{color:var(--eed)}
+  .nav{display:flex;flex-wrap:wrap;gap:.45rem .8rem;font-size:12px}
+  .nav a{color:var(--muted);text-decoration:none}
+  .nav a:hover,.nav a.active{color:var(--ink)}
+  .nav a.active{color:var(--eed)}
+  footer a{color:var(--eed)}
+</style>
+</head>
+<body>
+<div class="sticky"><div class="sticky-inner">
+  <a class="brand" href="index.html">GYRE Ledger <span>·</span> QED³ ↔ EED</a>
+  <nav class="nav">
+    <a href="index.html">Home</a>
+    <a class="active" href="ledger.html">Ledger</a>
+    <a href="notes.html">Notes</a>
+    <a href="library.html">Library</a>
+    <a href="status.html">Status</a>
+  </nav>
+</div></div>
+<header>
+  <h1>GYRE ledger · Buhler QED³ ↔ Hively EED</h1>
+  <p>Momentum bookkeeping first. Proposed term dictionary, not a derivation from an unpublished paper.</p>
+</header>
+<div class="banner">
+  Dictionary rows tagged <b>HYP</b> are a working map from Buhler’s public third-order language onto Hively’s published balance laws.
+  They are not term-by-term identities until Buhler’s amplitudes are written in the same gauge-free variables (A, Φ, C).
+  Residuals use SI: energy flux S = CE/μ₀, momentum density g = S/c² = ε₀ C E. Hively’s papers often list g = −CE/μ (c = 1 units).
+</div>
+
+<div class="wrap">
+  <div>
+    <div class="card">
+      <h2>Source geometry</h2>
+      <label>Asymmetry η <span class="v" id="vEta">0.55</span></label>
+      <input id="eta" type="range" min="0" max="1" step="0.01" value="0.55"/>
+      <label>Plate voltage (kV) <span class="v" id="vV">12.0</span></label>
+      <input id="volt" type="range" min="0.2" max="40" step="0.1" value="12"/>
+      <label>C-source Γ (continuity leak) <span class="v" id="vG">0.18</span></label>
+      <input id="gamma" type="range" min="0" max="1" step="0.01" value="0.18"/>
+      <label>Drive ω / ω₀ <span class="v" id="vW">1.00</span></label>
+      <input id="w" type="range" min="0.2" max="4" step="0.02" value="1"/>
+      <label>Medium conductivity σ/σ_Cu <span class="v" id="vS">0</span></label>
+      <input id="sig" type="range" min="0" max="1" step="0.01" value="0"/>
+      <label>QED³ mapping gain κ <span class="v" id="vK">1.00</span></label>
+      <input id="kappa" type="range" min="0" max="3" step="0.02" value="1"/>
+      <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+        <select id="mode">
+          <option value="mixed">Mixed TEM + SLW + SW</option>
+          <option value="slw">SLW only (B=0, E∥k, C≠0)</option>
+          <option value="sw">SW only (E=B=0, C≠0)</option>
+          <option value="tem">TEM only (C=0)</option>
+        </select>
+        <button class="primary" id="btnRun">Pause</button>
+        <button id="btnReset">Reset</button>
+      </div>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--plate)"></i>plates</span>
+        <span><i class="dot" style="background:var(--tem)"></i>E_TEM</span>
+        <span><i class="dot" style="background:var(--slw)"></i>C / E_SLW</span>
+        <span><i class="dot" style="background:var(--qed)"></i>QED³ source</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:10px">
+      <h2>Conservation KPIs</h2>
+      <div class="grid2">
+        <div class="kpi"><span>P_matter + P_field (N·s)</span><b id="kP">0</b></div>
+        <div class="kpi"><span>Momentum residual / |P_ref|</span><b id="kR">0</b></div>
+        <div class="kpi"><span>F_net on apparatus (μN)</span><b id="kF">0</b></div>
+        <div class="kpi"><span>SLW power leaving domain (μW)</span><b id="kW">0</b></div>
+      </div>
+      <p style="color:var(--muted);font-size:11px;margin:8px 0 0">
+        Isolated-system test: if SLW/SW carry the reaction, residual stays near 0 while F_net on matter is not 0.
+        If C=0 (TEM only), F_net and residual both collapse toward 0 after electrostatic self-stress cancels.
+      </p>
+    </div>
+  </div>
+
+  <div>
+    <div class="card">
+      <h2>1-D domain · apparatus + outgoing waves</h2>
+      <canvas id="cv" width="900" height="280"></canvas>
+    </div>
+    <div class="card" style="margin-top:10px">
+      <h2>Energy ledger (W/m³ and W/m²) — Hively eq. (44)</h2>
+      <table id="eTab"></table>
+    </div>
+    <div class="card" style="margin-top:10px">
+      <h2>Momentum ledger (N/m³ and N·s/m³) — Hively eq. (45)</h2>
+      <table id="pTab"></table>
+    </div>
+  </div>
+</div>
+
+<div class="wrap" style="padding-top:0">
+  <div class="card" style="grid-column:1/-1">
+    <h2>Proposed term-by-term dictionary</h2>
+    <table class="dict">
+      <thead><tr><th>Buhler public QED³ language</th><th>Order</th><th>Hively EED object</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>1st-order coupling magnitude ~ e</td>
+          <td>√α</td>
+          <td>Charge e as source of Φ, A. No wave yet.</td>
+          <td><span class="tag ex">exact (standard)</span></td>
+        </tr>
+        <tr>
+          <td>2nd-order virtual-photon exchange; Coulomb; two-charge vertex</td>
+          <td>α</td>
+          <td>CED subset: ρE, Maxwell stress, E×B/μ Poynting. Lorenz slice C=0.</td>
+          <td><span class="tag ex">exact (standard)</span></td>
+        </tr>
+        <tr>
+          <td>3rd-order three-charge / K→K′→K″ paths; extra √α; energy lower by ~√α</td>
+          <td>α^{3/2}</td>
+          <td>Candidate source for C: RHS of □C = −μ(∂tρ + ∇·J). Three-vertex processes can leave a local continuity remainder on sub-Heisenberg times.</td>
+          <td><span class="tag hyp">HYP</span></td>
+        </tr>
+        <tr>
+          <td>Selection rule of a, a† flips from −1 (2nd order) to +1 (3rd order)</td>
+          <td>α^{3/2}</td>
+          <td>C is a pseudoscalar. Even-order virtual-photon graphs cancel longitudinally; odd-order graphs can source a standing or traveling C.</td>
+          <td><span class="tag hyp">HYP</span></td>
+        </tr>
+        <tr>
+          <td>“Quantized electric fields possess momentum even at DC / vacuum”</td>
+          <td>α^{3/2}</td>
+          <td>SLW momentum density g_SLW = ε₀ C E (SI) = S_SLW/c², S_SLW = C E / μ₀. Pure SW (E=0) stores u_C = C²/(2μ₀) with <i>no</i> momentum — Hively’s SW.</td>
+          <td><span class="tag hyp">HYP</span></td>
+        </tr>
+        <tr>
+          <td>Asymmetric plate: field on one side, force always the other way</td>
+          <td>—</td>
+          <td>η-weighted source S_C(x) on the high-|E| face. Outgoing SLW on that face carries +P_field; apparatus recoils with J C and −∇(C²/2μ) pressure.</td>
+          <td><span class="tag hyp">HYP</span></td>
+        </tr>
+        <tr>
+          <td>Reaction “in the vacuum, not ZPE / not expelled mass”</td>
+          <td>—</td>
+          <td>P_matter + P_TEM + P_SLW + P_SW-pressure-impulse = 0. Vacuum here is the C field, not a hidden mass current.</td>
+          <td><span class="tag hyp">HYP</span></td>
+        </tr>
+        <tr>
+          <td>No published closed amplitudes (Buhler: math not closed)</td>
+          <td>—</td>
+          <td>Cannot yet match coefficients of α^{3/2} to Γ. Slider κ is a placeholder for that missing match.</td>
+          <td><span class="tag">open</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>EED field equations used</h2>
+    <p style="font-size:12px;color:var(--muted)">
+      E = −∇Φ − ∂t A&nbsp;&nbsp;·&nbsp;&nbsp;B = ∇×A&nbsp;&nbsp;·&nbsp;&nbsp;C = ∇·A + c⁻² ∂t Φ<br/>
+      ∇×B − c⁻² ∂t E − ∇C = μ₀ J<br/>
+      ∇·E + ∂t C = ρ/ε₀<br/>
+      □C ≡ ∇²C − c⁻² ∂tt C = −μ₀ (∂t ρ + ∇·J)<br/>
+      Energy (44): ∂t(ε₀ E²/2 + B²/2μ₀ + C²/2μ₀) + ∇·(E×B/μ₀ + C E/μ₀) + J·E = ρ C / (ε₀ μ₀)<br/>
+      Momentum (45) densities: ρE + J×B + J C − ∇(C²/2μ₀) + mixed (C/μ₀)∇×B + Maxwell-stress divergence + ∂t(ε₀ E×B + ε₀ C E)
+    </p>
+  </div>
+  <div class="card">
+    <h2>How to read a “yes” on equivalence</h2>
+    <p style="font-size:12px;color:var(--muted)">
+      A term is equivalent only if (i) tensor rank and SI units match, (ii) the source that drives it is the same operator,
+      (iii) the isolated-system residual vanishes, and (iv) the α-power counting matches a definite QED graph class.
+      Today only the 1st/2nd-order rows clear that bar. The 3rd-order rows are a research program: treat Γ as the
+      unknown matrix element of Buhler’s three-state sum, then demand that κ be fixed by α^{3/2} rather than fitted to thrust.
+    </p>
+  </div>
+</div>
+<footer>
+  GYRE ledger · SI units · vacuum c, ε₀, μ₀ · SLW unconstrained by skin effect in the model (Hively: B=0 ⇒ no eddy dissipation).
+  This is a bookkeeping instrument, not a claim that Exodus thrust is established.<br/>
+  <a href="index.html">Home</a> · <a href="notes.html">Notes</a> · <a href="library.html">Library</a> · <a href="status.html">Status</a><br/>
+  Dan Britton · BrittonSolutions@icloud.com · educational.
+</footer>
+
+<script>
+const c0 = 2.99792458e8, mu0 = 4*Math.PI*1e-7, eps0 = 1/(mu0*c0*c0), ALPHA = 1/137.035999;
+const N = 220, L = 2.0, dx = (2*L)/(N-1);
+const xs = Float64Array.from({length:N}, (_,i)=> -L + i*dx);
+const plateL = -0.18, plateR = 0.18;
+
+let C = new Float64Array(N), Ct = new Float64Array(N);
+let EL = new Float64Array(N), ET = new Float64Array(N), Bz = new Float64Array(N);
+let t = 0, dt = 2.2e-10, running = true, accP = 0, accE = 0;
+
+const $ = id => document.getElementById(id);
+function fmt(x, d=3){
+  if (!isFinite(x)) return "—";
+  const a = Math.abs(x);
+  if (a !== 0 && (a < 1e-3 || a >= 1e4)) return x.toExponential(d);
+  return x.toFixed(d);
+}
+function cls(x){ const a=Math.abs(x); if(a<1e-18) return "zero"; return x>=0?"pos":"neg"; }
+
+function srcProfile(eta){
+  // Irrotational source peaked on the high-field face of an asymmetric capacitor.
+  const s = new Float64Array(N);
+  for (let i=0;i<N;i++){
+    const x = xs[i];
+    const left = Math.exp(-((x-plateL)/0.06)**2);
+    const right= Math.exp(-((x-plateR)/0.06)**2);
+    s[i] = (1+eta)*left - (1-eta)*right;
+  }
+  return s;
+}
+
+function step(){
+  const eta = +$("eta").value, V = +$("volt").value*1e3;
+  const G = +$("gamma").value, wfac = +$("w").value, sig = +$("sig").value;
+  const kap = +$("kappa").value, mode = $("mode").value;
+  const omega = wfac * 2*Math.PI*4.0e8; // ~400 MHz band, lab-ish
+  const gap = plateR-plateL;
+  const E0 = V/gap;
+  const prof = srcProfile(eta);
+
+  // Electrostatic TEM-like longitudinal bias (does not radiate C by itself)
+  const Estat = new Float64Array(N);
+  for (let i=0;i<N;i++){
+    const x = xs[i];
+    if (x>plateL && x<plateR) Estat[i] = E0*(1 + 0.65*eta*Math.tanh(12*(x)));
+    else Estat[i] = 0;
+  }
+
+  // QED3 hypothesized source: three-charge vertex ~ α^{3/2} κ Γ η E0 ω
+  // Continuity leak S = ∂tρ+∇·J  →  □C = −μ0 S
+  const qed3 = kap * G * Math.pow(ALPHA, 1.5) * (eps0*E0) * omega; // C/m³ /s scaled
+  const drive = Math.sin(omega*t);
+  const Scont = new Float64Array(N); // ∂tρ + div J
+  for (let i=0;i<N;i++){
+    Scont[i] = qed3 * prof[i] * drive;
+  }
+
+  // Mode gates
+  let allowC = mode!=="tem", allowSLW = mode==="mixed"||mode==="slw", allowSW = mode==="mixed"||mode==="sw";
+  let allowTEM = mode==="mixed"||mode==="tem";
+
+  // Wave update for C: C_tt = c² C_xx + c² μ0 Scont  (since □C = −μ S ⇒ −c^{-2}C_tt + C_xx = −μ S)
+  // C_tt = c² C_xx + c² μ0 S
+  if (allowC){
+    const Cxx = new Float64Array(N);
+    for (let i=1;i<N-1;i++) Cxx[i] = (C[i+1]-2*C[i]+C[i-1])/(dx*dx);
+    // weak conductivity damps TEM/eddy; SLW/SW (B=0) undamped per Hively no-skin
+    const dampTEM = 1 + 4*sig;
+    for (let i=1;i<N-1;i++){
+      const acc = c0*c0*Cxx[i] + c0*c0*mu0*Scont[i];
+      Ct[i] += acc*dt;
+      // SW vs SLW: conductivity does not damp C itself
+      C[i] += Ct[i]*dt;
+    }
+    // absorbing ends
+    C[0]*=0.92; C[N-1]*=0.92; Ct[0]*=0.92; Ct[N-1]*=0.92;
+  } else {
+    C.fill(0); Ct.fill(0);
+  }
+
+  // Fields from C: free-space SLW relation ∂x E = −∂t C
+  // Integrate E_SLW from left, drop global constant.
+  const ESLW = new Float64Array(N);
+  if (allowSLW){
+    let run = 0;
+    ESLW[0]=0;
+    for (let i=1;i<N;i++){
+      const dCdx = (C[i]-C[i-1])/dx;
+      // ∂x E = −Ct  → ΔE = −Ct Δx
+      run += -0.5*(Ct[i]+Ct[i-1])*dx;
+      ESLW[i] = run;
+    }
+    // remove mean to keep compact support-ish
+    let m=0; for (let i=0;i<N;i++) m+=ESLW[i]; m/=N;
+    for (let i=0;i<N;i++) ESLW[i]-=m;
+  }
+  if (!allowSW && allowSLW){
+    // keep E
+  }
+  if (allowSW && !allowSLW){
+    ESLW.fill(0); // pure SW: energy in C only
+  }
+
+  const ETEM = allowTEM ? Estat : new Float64Array(N);
+  // tiny TEM radiation proxy from time-varying electrostatics (not a real antenna model)
+  if (allowTEM){
+    const tramp = 0.04*eta*E0*Math.cos(omega*t);
+    for (let i=0;i<N;i++){
+      const env = Math.exp(-((Math.abs(xs[i])-0.7)/0.25)**2);
+      Bz[i] = tramp*env/c0;
+      ET[i] = tramp*env;
+    }
+  } else { Bz.fill(0); ET.fill(0); }
+
+  for (let i=0;i<N;i++){
+    EL[i] = ETEM[i] + ESLW[i];
+  }
+
+  // Local densities
+  let U_E=0,U_B=0,U_C=0, S_tem=0,S_slw=0, srcE=0, JdotE=0;
+  let g_tem=0,g_slw=0, f_lor=0, f_JC=0, f_press=0, f_mix=0, f_maxw=0;
+  let Pmatter=0, Pfield=0, fluxL=0, fluxR=0;
+
+  const Jx = new Float64Array(N); // conduction + displacement-like apparatus current on plates
+  for (let i=0;i<N;i++){
+    const onPlate = (Math.abs(xs[i]-plateL)<0.03)||(Math.abs(xs[i]-plateR)<0.03);
+    Jx[i] = onPlate ? (sig*1.0e4*EL[i] + eps0*omega*E0*0.15*eta*Math.cos(omega*t)*prof[i]) : sig*1e3*ET[i];
+  }
+
+  for (let i=1;i<N-1;i++){
+    const e2 = EL[i]*EL[i] + ET[i]*ET[i];
+    const uE = 0.5*eps0*e2;
+    const uB = 0.5*Bz[i]*Bz[i]/mu0;
+    const uC = 0.5*C[i]*C[i]/mu0;
+    const Stem = ET[i]*Bz[i]/mu0;           // x-component of E×B/μ
+    const Sslw = C[i]*EL[i]/mu0;            // Hively SLW Poynting
+    const rho = eps0*((EL[i+1]-EL[i-1])/(2*dx) + Ct[i]); // from Gauss+C: ρ = ε(∇·E + ∂t C)
+    const src = rho * C[i] / (eps0*mu0);    // energy source ρC/εμ
+    const jd = Jx[i]*EL[i];
+    const gTEM = Stem/(c0*c0);
+    const gSLW = Sslw/(c0*c0);              // SI momentum density
+    const fRhoE = rho*EL[i];
+    const fJB = 0;                          // J×B has no x from Jx, Bz → y
+    const fJC = Jx[i]*C[i];
+    const dC = (C[i+1]-C[i-1])/(2*dx);
+    const fPr = -(C[i]*dC)/mu0;             // −∂x (C²/2μ)
+    const fMx = -eps0*EL[i]*((EL[i+1]-EL[i-1])/(2*dx)); // crude 1-D Maxwell stress remnant
+    const dV = dx; // per unit area slab
+
+    U_E += uE*dV; U_B += uB*dV; U_C += uC*dV;
+    S_tem += Stem; S_slw += Sslw;
+    srcE += src*dV; JdotE += jd*dV;
+    g_tem += gTEM*dV; g_slw += gSLW*dV;
+    f_lor += (fRhoE+fJB)*dV;
+    f_JC += fJC*dV;
+    f_press += fPr*dV;
+    f_maxw += fMx*dV;
+  }
+  fluxL = (C[2]*EL[2] + ET[2]*Bz[2])/mu0;
+  fluxR = (C[N-3]*EL[N-3] + ET[N-3]*Bz[N-3])/mu0;
+
+  // Matter force ≈ Lorentz + JC + pressure on the apparatus support of the plates
+  const Fnet = f_lor + f_JC + f_press + f_maxw; // N / m² (force per unit area)
+  Pfield = g_tem + g_slw;
+  // Integrate force to momentum of matter (per m²)
+  accP += Fnet * dt;
+  const Ptot = accP + Pfield;
+  const Pref = Math.max(1e-16, Math.abs(Pfield)+Math.abs(accP));
+  const resid = Ptot / Pref;
+
+  // Paint KPIs
+  $("kP").textContent = fmt(Ptot, 3);
+  $("kP").style.color = Math.abs(resid)<0.08 ? "var(--ok)" : "var(--warn)";
+  $("kR").textContent = fmt(resid, 3);
+  $("kF").textContent = fmt(Fnet*1e6, 3); // μN/m²
+  $("kW").textContent = fmt((Math.abs(fluxL)+Math.abs(fluxR))*1e6, 3);
+
+  renderEnergy({
+    uE:U_E,uB:U_B,uC:U_C, Stem:S_tem/N, Sslw:S_slw/N, src:srcE, jd:JdotE, fluxL, fluxR
+  });
+  renderMom({
+    gTEM:g_tem,gSLW:g_slw, fLor:f_lor, fJC:f_JC, fPr:f_press, fMx:f_maxw,
+    Pmat:accP, Pfield, Ptot, resid, Fnet
+  });
+  draw(EL, ET, C, Bz, ETEM, ESLW, Scont, eta);
+  t += dt;
+}
+
+function renderEnergy(e){
+  const rows = [
+    ["CED electric u_E = ε₀ E²/2", e.uE, "CED"],
+    ["CED magnetic u_B = B²/2μ₀", e.uB, "CED"],
+    ["EED scalar u_C = C²/2μ₀", e.uC, "EED"],
+    ["CED flux ⟨E×B/μ₀⟩", e.Stem, "CED"],
+    ["EED SLW flux ⟨C E/μ₀⟩", e.Sslw, "EED"],
+    ["EED source ρC/(ε₀μ₀)", e.src, "EED"],
+    ["Joule J·E", e.jd, "CED"],
+    ["Outgoing flux @ −L", e.fluxL, "mix"],
+    ["Outgoing flux @ +L", e.fluxR, "mix"],
+  ];
+  $("eTab").innerHTML = "<tr><th>Term</th><th>Value</th><th>Family</th></tr>" +
+    rows.map(r=>`<tr><td>${r[0]}</td><td class="${cls(r[1])}">${fmt(r[1])}</td><td>${r[2]}</td></tr>`).join("");
+}
+function renderMom(p){
+  const rows = [
+    ["P_TEM = ∫ (E×B)/(μ₀ c²)", p.gTEM, "CED"],
+    ["P_SLW = ∫ ε₀ C E   [SI = S/c²]", p.gSLW, "EED"],
+    ["Force ρE + J×B (CED Lorentz)", p.fLor, "CED"],
+    ["Force J C  (EED, ∥ J)", p.fJC, "EED"],
+    ["Force −∇(C²/2μ₀) scalar pressure", p.fPr, "EED"],
+    ["1-D Maxwell-stress remnant", p.fMx, "CED"],
+    ["∫ F dt  = P_matter", p.Pmat, "app"],
+    ["P_field = P_TEM + P_SLW", p.Pfield, "mix"],
+    ["P_matter + P_field  (must ~ 0)", p.Ptot, "test"],
+    ["residual", p.resid, "test"],
+  ];
+  $("pTab").innerHTML = "<tr><th>Term</th><th>Value</th><th>Family</th></tr>" +
+    rows.map(r=>`<tr><td>${r[0]}</td><td class="${cls(r[1])}">${fmt(r[1])}</td><td>${r[2]}</td></tr>`).join("");
+}
+
+function draw(EL, ET, C, Bz, ETEM, ESLW, Scont, eta){
+  const cv=$("cv"), ctx=cv.getContext("2d");
+  const W=cv.width, H=cv.height;
+  ctx.clearRect(0,0,W,H);
+  const xpix = x => (x+L)/(2*L)*W;
+  const mid = H*0.58;
+  // axis
+  ctx.strokeStyle="#243056"; ctx.beginPath(); ctx.moveTo(0,mid); ctx.lineTo(W,mid); ctx.stroke();
+  // plates
+  ctx.fillStyle="#94a3b8";
+  const ph=40+50*eta;
+  ctx.fillRect(xpix(plateL)-3, mid-ph, 6, ph*2);
+  ctx.fillRect(xpix(plateR)-3, mid-(ph*0.55), 6, ph*1.1);
+  ctx.fillStyle="#8b97b8"; ctx.font="11px sans-serif";
+  ctx.fillText("−", xpix(plateL)-10, mid-ph-6);
+  ctx.fillText("+", xpix(plateR)+8, mid-ph*0.55-6);
+
+  function plot(arr, color, scale, y0){
+    ctx.beginPath(); ctx.strokeStyle=color; ctx.lineWidth=1.6;
+    for (let i=0;i<N;i++){
+      const px=xpix(xs[i]), py=y0 - arr[i]*scale;
+      if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+    }
+    ctx.stroke();
+  }
+  const maxC = Math.max(1e-12, ...C.map(Math.abs));
+  const maxE = Math.max(1e-12, ...EL.map(Math.abs), ...ET.map(Math.abs));
+  const maxS = Math.max(1e-12, ...Scont.map(Math.abs));
+  plot(Scont, "#ffb14a", 50/maxS, 36);
+  plot(C, "#5eead4", 70/maxC, mid);
+  plot(EL, "#7dd3fc", 50/maxE, mid);
+  plot(ET, "#60a5fa", 50/Math.max(1e-12,...ET.map(Math.abs)), mid);
+
+  ctx.fillStyle="#ffb14a"; ctx.fillText("QED³ continuity source S=∂tρ+∇·J", 10, 16);
+  ctx.fillStyle="#5eead4"; ctx.fillText("C  (scalar)", 10, mid-86);
+  ctx.fillStyle="#7dd3fc"; ctx.fillText("E_x = E_TEM + E_SLW", 120, mid-86);
+  ctx.fillStyle="#60a5fa"; ctx.fillText("E_TEM rad", 280, mid-86);
+}
+
+["eta","volt","gamma","w","sig","kappa"].forEach(id=>{
+  $(id).addEventListener("input", ()=>{
+    $("vEta").textContent = (+$("eta").value).toFixed(2);
+    $("vV").textContent = (+$("volt").value).toFixed(1);
+    $("vG").textContent = (+$("gamma").value).toFixed(2);
+    $("vW").textContent = (+$("w").value).toFixed(2);
+    $("vS").textContent = (+$("sig").value).toFixed(2);
+    $("vK").textContent = (+$("kappa").value).toFixed(2);
+  });
+});
+$("btnRun").onclick = ()=>{ running=!running; $("btnRun").textContent = running?"Pause":"Run"; };
+$("btnReset").onclick = ()=>{
+  C.fill(0); Ct.fill(0); EL.fill(0); ET.fill(0); Bz.fill(0); t=0; accP=0;
+};
+["eta","volt","gamma","w","sig","kappa","mode"].forEach(id=>{
+  $(id).addEventListener("change", ()=>{ C.fill(0); Ct.fill(0); accP=0; t=0; });
+});
+
+function loop(){
+  if (running){
+    for (let k=0;k<4;k++) step();
+  }
+  requestAnimationFrame(loop);
+}
+// init labels
+$("vEta").textContent = "0.55";
+loop();
+</script>
+</body>
+</html>

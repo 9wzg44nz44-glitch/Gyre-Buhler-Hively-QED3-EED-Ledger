@@ -1,0 +1,91 @@
+:root{
+  --bg:#0b1020; --bg2:#0f1528; --panel:#141a2e; --ink:#e8eefc; --muted:#8b97b8;
+  --line:#243056; --ced:#7aa2ff; --eed:#3ee0b8; --qed:#ffb14a;
+  --slw:#5eead4; --sw:#c4b5fd; --tem:#60a5fa; --warn:#fb7185;
+  --ok:#34d399; --plate:#94a3b8; --banner-bg:#1a140c; --banner-border:#5b3b16;
+  --banner-ink:#fbbf24; --max:980px; --radius:12px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;
+}
+a{color:var(--eed);text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{color:#7ff5d4}
+.sticky{
+  position:sticky;top:0;z-index:50;
+  backdrop-filter:blur(12px);
+  background:rgba(11,16,32,.92);
+  border-bottom:1px solid var(--line);
+}
+.sticky-inner{
+  max-width:calc(var(--max) + 48px);
+  margin:0 auto;padding:.7rem 1.1rem;
+  display:flex;flex-wrap:wrap;gap:.55rem 1rem;
+  align-items:center;justify-content:space-between;
+}
+.brand{font-size:.95rem;letter-spacing:.02em;color:var(--ink);text-decoration:none;font-weight:600}
+.brand span{color:var(--eed)}
+.nav{display:flex;flex-wrap:wrap;gap:.5rem .85rem;font-size:.82rem}
+.nav a{color:var(--muted);text-decoration:none}
+.nav a:hover,.nav a.active{color:var(--ink)}
+.wrap{max-width:var(--max);margin:0 auto;padding:1.1rem 1.1rem 2.5rem}
+.banner{
+  margin:0 0 1.1rem;padding:10px 12px;
+  border:1px solid var(--banner-border);background:var(--banner-bg);
+  color:var(--banner-ink);font-size:13px;border-radius:8px;line-height:1.5;
+}
+.banner b{color:#fde68a}
+h1{margin:.2rem 0 .5rem;font-size:1.55rem;letter-spacing:.01em}
+h2{margin:1.4rem 0 .55rem;font-size:1.05rem;color:var(--ink)}
+h3{margin:1rem 0 .4rem;font-size:.95rem;color:var(--ced)}
+.lede{color:var(--muted);font-size:.95rem;margin:0 0 1.1rem;max-width:62ch}
+.card{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--radius);padding:14px 16px;margin:0 0 12px;
+}
+.card h2{margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.grid{display:grid;gap:12px}
+@media(min-width:720px){.grid-2{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:1fr 1fr 1fr}}
+.kpi{background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.kpi b{display:block;font-size:1.05rem;margin-top:2px}
+.kpi span{color:var(--muted);font-size:11px}
+.tag{display:inline-block;font-size:10px;padding:2px 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted);vertical-align:middle}
+.tag.hyp{border-color:#7c4a12;color:#fbbf24}
+.tag.ex{border-color:#14532d;color:#86efac}
+.tag.open{border-color:#334155;color:#94a3b8}
+.btn{
+  display:inline-block;padding:8px 14px;border-radius:8px;
+  background:#12352e;border:1px solid #2a6b5c;color:var(--eed);
+  text-decoration:none;font-size:.88rem;font-weight:600;
+}
+.btn:hover{background:#164a40;color:#b6ffe9}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--muted)}
+.btn.ghost:hover{color:var(--ink);border-color:#3a4a78}
+ul.clean{margin:.4rem 0;padding-left:1.15rem;color:var(--muted)}
+ul.clean li{margin:.35rem 0}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+.eq{
+  background:var(--bg2);border:1px solid var(--line);border-radius:8px;
+  padding:10px 12px;margin:.6rem 0;overflow-x:auto;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;color:var(--slw);
+  line-height:1.55;
+}
+.lib-card h3{margin:0 0 6px;font-size:1rem;color:var(--ink)}
+.lib-card .meta{color:var(--muted);font-size:12px;margin:0 0 8px}
+.lib-card p{margin:0;color:var(--muted);font-size:13.5px}
+.footer{
+  max-width:var(--max);margin:0 auto;padding:0 1.1rem 2rem;
+  color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding-top:1rem;
+}
+.footer a{color:var(--muted)}
+.checklist{list-style:none;padding:0;margin:0}
+.checklist li{
+  padding:8px 10px;margin:0 0 6px;background:var(--bg2);
+  border:1px solid var(--line);border-radius:8px;font-size:13.5px;color:var(--muted);
+}
+.checklist li::before{content:"○ ";color:var(--qed)}
+.note{font-size:12.5px;color:var(--muted);margin-top:.6rem}

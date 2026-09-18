@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Research status · GYRE Ledger · QED³ ↔ EED</title>
+<meta name="description" content="L1 research-status pin: facts vs HYP, open items, and honesty constraints for the GYRE / EED / QED³ workstream."/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="sticky"><div class="sticky-inner">
+  <a class="brand" href="index.html">GYRE Ledger <span>·</span> QED³ ↔ EED</a>
+  <nav class="nav">
+    <a href="index.html">Home</a>
+    <a href="ledger.html">Ledger</a>
+    <a href="notes.html">Notes</a>
+    <a href="library.html">Library</a>
+    <a href="status.html" class="active">Status</a>
+  </nav>
+</div></div>
+<div class="wrap">
+  <div class="banner">
+    <b>Status: research instrument</b> — not a claim that Exodus thrust is established.
+    L1 honesty: no breakthrough language, no invented coefficients, no fabricated peer-review timelines.
+  </div>
+  <h1>Research status pin</h1>
+  <p class="lede">Owner: Dan Britton · Updated: 2026-09-17 · Workstream: GYRE / EED / QED³</p>
+
+  <div class="card">
+    <h2>Why this is a priority</h2>
+    <p style="margin:0;color:var(--muted);font-size:14px">
+      Ongoing personal experimental-physics program: scalar longitudinal waves (SLW), Hively extended electrodynamics (EED),
+      Gyre simulator (HTML + Mathematica). New workstream opened 2026-09-17 maps Exodus/Buhler third-order QED language
+      onto Hively energy–momentum balances.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Facts (do not upgrade these to proofs)</h2>
+    <ol style="color:var(--muted);font-size:14px;margin:.2rem 0;padding-left:1.2rem">
+      <li style="margin:.45rem 0">QED perturbation theory at third order is a valid calculational tool. “QED is not self-consistent” (Dyson series, Haag, Landau pole) does not invalidate that order.</li>
+      <li style="margin:.45rem 0">Buhler’s published talks use 1st / 2nd / 3rd order language (√α, α, α<sup>3/2</sup>), a changed a,a† selection rule at 3rd order, and vacuum-field momentum in an asymmetric geometry. He has said the math is not closed. No peer-reviewed amplitude set is in the packet.</li>
+      <li style="margin:.45rem 0">Hively EED is gauge-free. C = ∇·A + c<sup>−2</sup> ∂tΦ. Modes: TEM (C=0), SLW (B=0, E∥k, C≠0), SW (E=B=0, C≠0).</li>
+      <li style="margin:.45rem 0">SI used in the ledger (Hively often writes c=1): u_C = C²/(2μ₀); S_SLW = C E / μ₀; g_SLW = S/c² = ε₀ C E; energy source ρC/(ε₀μ₀); forces J C and −∇(C²/2μ₀).</li>
+      <li style="margin:.45rem 0">Only 1st-order and 2nd-order dictionary rows are identities. All 3rd-order rows are <span class="tag hyp">HYP</span>. Slider κ is the missing QED³ matrix element.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>Proposed dictionary status</h2>
+    <table>
+      <thead><tr><th>Buhler language</th><th>α</th><th>EED object</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>1st-order coupling</td><td>√α</td><td>charge sourcing Φ, A</td><td><span class="tag ex">exact</span></td></tr>
+        <tr><td>2nd-order two-charge / Coulomb</td><td>α</td><td>CED ρE, Maxwell stress, E×B/μ</td><td><span class="tag ex">exact</span></td></tr>
+        <tr><td>3rd-order three-state sum</td><td>α<sup>3/2</sup></td><td>source of □C = −μ₀(∂tρ+∇·J)</td><td><span class="tag hyp">HYP</span></td></tr>
+        <tr><td>a,a† selection +1 not −1</td><td>α<sup>3/2</sup></td><td>C pseudoscalar; odd-order longitudinal remainder</td><td><span class="tag hyp">HYP</span></td></tr>
+        <tr><td>quantized E has vacuum momentum</td><td>α<sup>3/2</sup></td><td>SLW g=ε₀CE; SW energy only</td><td><span class="tag hyp">HYP</span></td></tr>
+        <tr><td>force opposite populated-field face</td><td>—</td><td>η-weighted S_C; outgoing SLW reaction</td><td><span class="tag hyp">HYP</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Isolated-system tests to remember</h2>
+    <ul class="clean">
+      <li>TEM only, Γ=0 → F_net and residual collapse.</li>
+      <li>SLW, η&gt;0, Γ&gt;0 → F_net on matter may be nonzero while P_matter+P_SLW ≈ 0 if the wave is the reaction.</li>
+      <li>SW only → cannot carry Exodus-style thrust.</li>
+      <li>Raise σ → TEM damps; SLW/SW do not (no-skin, B=0).</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Open items</h2>
+    <ul class="checklist">
+      <li>Obtain or reconstruct Buhler 3rd-order amplitudes in (A, Φ) without Lorenz-dumping C.</li>
+      <li>Fix κ from α<sup>3/2</sup>; stop fitting it to thrust.</li>
+      <li>Same boundary-value problem in EED and from those amplitudes; match S_SLW and J C.</li>
+      <li>Port ledger terms into the Mathematica Gyre notebook when requested.</li>
+      <li>Do not treat vacuum-chamber force claims as settled. Experiment ≠ dictionary.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Hard constraints (this site)</h2>
+    <ul class="clean">
+      <li>Do not announce a derivation or a propulsion breakthrough.</li>
+      <li>Do not email or contact Buhler / Hively / APEC from this workstream.</li>
+      <li>Do not invent coefficients, citations, or “peer review later this year” as completed.</li>
+    </ul>
+  </div>
+</div>
+<div class="footer">
+  Dan Britton · <a href="mailto:BrittonSolutions@icloud.com">BrittonSolutions@icloud.com</a> · educational.<br/>
+  Research instrument only — not a derivation of Exodus thrust · not peer-reviewed · not an endorsement of any vendor or claim.
+</div>
+</body>
+</html>
