@@ -86,6 +86,15 @@
   .answer{border:1px solid #5b3b16;background:#1a140c;border-radius:10px;padding:12px 14px;margin:0 0 12px}
   .answer h2{color:#fbbf24;margin:0 0 6px;font-size:13px;text-transform:none;letter-spacing:0}
   .answer p{color:#fde68a;margin:0;font-size:13.5px;line-height:1.55}
+
+  .glossary{margin:10px 16px 0;padding:10px 12px;border:1px solid var(--line);background:var(--bg2,#0f1528);border-radius:8px;font-size:12px;color:var(--muted);line-height:1.55}
+  .glossary h3{margin:0 0 6px;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--eed)}
+  .glossary dl{margin:0;display:grid;grid-template-columns:1fr;gap:4px 12px}
+  @media(min-width:720px){.glossary dl{grid-template-columns:1fr 1fr}}
+  .glossary dt{color:var(--ink);font-weight:600;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px}
+  .glossary dd{margin:0 0 6px;padding-left:0}
+  .glossary .g-lead{margin:0 0 8px;color:var(--slw,#5eead4);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+
 </style>
 </head>
 <body>
@@ -108,6 +117,21 @@
   <p class="sub">Focused educational toy — not the full phase walker. Voltage locked at 600 V DC. Only hypothesized continuity remainders can source □C. Warm skepticism. No breakthrough claims.</p>
 </header>
 
+<div class="glossary" id="symbols">
+  <h3>Symbols (first use)</h3>
+  <p class="g-lead">g_SLW = ε₀ C E — SLW momentum density (SI). ε₀ = vacuum permittivity; C = Hively scalar field (same SI units as B, from C = ∇·A + c⁻² ∂t Φ); E = electric field. Related: S_SLW = C E / μ₀ (energy flux), g_SLW = S_SLW / c².</p>
+  <dl>
+    <div><dt>μ₀ · c · Φ · A · B</dt><dd>μ₀ = vacuum permeability; c = speed of light; Φ = electric scalar potential; A = magnetic vector potential; B = magnetic field.</dd></div>
+    <div><dt>ρ · J</dt><dd>ρ = charge density; J = current density.</dd></div>
+    <div><dt>□C = −μ₀(∂tρ+∇·J)</dt><dd>Wave operator on C sourced by a continuity remainder. If ∂tρ+∇·J = 0 exactly, □C has no source.</dd></div>
+    <div><dt>TEM · SLW · SW</dt><dd>Hively modes: TEM (C=0, usual EM); SLW (B=0, E∥k, C≠0 — can carry momentum); SW (E=B=0, C≠0 — energy only).</dd></div>
+    <div><dt>F_net · P_matter · P_SLW</dt><dd>F_net = net force on craft/mount (educational μN); P_matter = ∫F dt impulse on matter; P_SLW = field momentum ∫ ε₀ C E.</dd></div>
+    <div><dt>η · λ · Γ · σ · Q · V · PS</dt><dd>η = plate asymmetry (0–1); λ = tunneling/leakage knob on the full walker; Γ = SLW coupling; σ = mechanism strength here; Q = plate charge; V = voltage; PS = power supply.</dd></div>
+    <div><dt>HYP · EED · QED³</dt><dd>HYP = hypothesized (not proven); EED = Hively extended electrodynamics; QED³ = third-order QED language (Buhler public talks) — dictionary rows remain HYP.</dd></div>
+  </dl>
+  <p style="margin:6px 0 0;font-size:11px">Warm skepticism: defining symbols does not make the thrust claim true. Classically static + J=0 ⇒ no SLW, F_net→0.</p>
+</div>
+
 <div class="lock">
   <b>Locked assumptions:</b> Isolated (PS removed) · plates pre-charged to <b>600 V DC</b> · no supply current · only HYP continuity remainders below.
 </div>
@@ -115,7 +139,7 @@
 <div class="banner">
   <b>Educational toy — not a derivation of Exodus thrust.</b>
   Classically static + J=0 ⇒ ∂tρ+∇·J=0 ⇒ □C has no source ⇒ no SLW, F_net→0.
-  Each mechanism below is a hypothesized remainder that <i>might</i> source C → possible g_SLW = ε₀ C E recoil. Pair production and sub-Heisenberg are <b>more</b> speculative than tunneling.
+  Each mechanism below is a hypothesized remainder that <i>might</i> source C → possible g_SLW = ε₀ C E (SLW momentum density) recoil. Pair production and sub-Heisenberg are <b>more</b> speculative than tunneling.
 </div>
 
 <div class="wrap">
