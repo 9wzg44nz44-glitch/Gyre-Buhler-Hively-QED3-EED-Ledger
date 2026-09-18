@@ -77,6 +77,24 @@
   footer{color:var(--muted);font-size:11px;padding:0 16px 20px;max-width:1100px;margin:0 auto}
   footer a{color:var(--eed)}
   .note{font-size:12px;color:var(--muted);margin:6px 0 0}
+
+  .finding{
+    margin:12px 16px 0;padding:14px 16px;
+    border:2px solid #34d399;border-radius:12px;
+    background:linear-gradient(160deg,#0a1f18 0%,#12241f 55%,#0f1528 100%);
+    box-shadow:0 0 0 1px rgba(52,211,153,.25), 0 12px 40px rgba(0,0,0,.35);
+  }
+  .finding .kicker{
+    display:inline-block;font-size:10px;font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;color:#0b1020;background:#34d399;
+    padding:3px 8px;border-radius:999px;margin:0 0 8px;
+  }
+  .finding h2{margin:0 0 8px;font-size:16px;color:#86efac;text-transform:none;letter-spacing:0;line-height:1.35}
+  .finding p{margin:0;color:#d1fae5;font-size:13.5px;line-height:1.55}
+  .finding .preset{margin-top:10px;padding:8px 10px;background:rgba(0,0,0,.28);border:1px solid #2a6b5c;border-radius:8px;font-size:13px;color:#a7f3d0}
+  .finding .preset b{color:#ecfdf5}
+  .finding .caveat{margin-top:8px;font-size:12px;color:#fbbf24}
+
   ul.clean{margin:.35rem 0;padding-left:1.15rem}
   ul.clean li{margin:.35rem 0}
   .src-list{list-style:none;padding:0;margin:0}
@@ -116,6 +134,25 @@
   <p class="lede">Is there a net force present after the power supply is removed that might be explained by SLW emission and its momentum on the capacitor and spacecraft?</p>
   <p class="sub">Focused educational toy — not the full phase walker. Voltage locked at 600 V DC. Only hypothesized continuity remainders can source □C. Warm skepticism. No breakthrough claims.</p>
 </header>
+
+<div class="finding" id="finding">
+  <span class="kicker">Educational model finding</span>
+  <h2>Yes — with the power supply off and removed, this toy can show a sustained Net Force on the craft/mount.</h2>
+  <p>
+    <b>When:</b> Isolated (PS removed) · plates at <b>600&nbsp;V&nbsp;DC</b> · asymmetry η≈<b>0.80</b> · mechanism <b>Tunneling</b> · strength σ≈<b>0.35</b>
+    (on the full walker: λ≈0.30 · Γ≈0.45 · Q≈Qmax).
+    Outbound SLW momentum density <b>g_SLW = ε₀ C E</b> is bookkept as the reaction channel so F_net on the capacitor/spacecraft mount can stay nonzero while P_matter + P_SLW stays near zero.
+  </p>
+  <div class="preset">
+    <b>Loud contrast:</b> hit <b>Compare null (σ=0)</b> → classical static isolation → <b>F_net → 0</b>, no lasting SLW.
+    Turn σ back up → residual F_net returns. That on/off switch is the “discovery” this window is built to make obvious.
+  </div>
+  <p class="caveat">
+    <b>Caveat (warm skepticism):</b> this is a finding <i>inside the educational model</i> when a hypothesized continuity remainder (tunneling / etc.) is dialed in.
+    It is <b>not</b> a laboratory measurement, not a proof of Exodus thrust, and not a closed Buhler amplitude. σ&gt;0 assumes the HYP source; σ=0 recovers classical null.
+  </p>
+</div>
+
 
 <div class="glossary" id="symbols">
   <h3>Symbols (first use)</h3>
