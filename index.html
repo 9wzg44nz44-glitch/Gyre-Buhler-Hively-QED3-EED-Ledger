@@ -208,6 +208,76 @@
         We do not fit σ to their thrust number. Warm skepticism. No breakthrough claim.
       </p>
     </div>
+
+    <div class="napkin" id="napkin-math">
+      <h2>Back-of-the-envelope · check if numbers are in the ballpark</h2>
+      <p style="margin:0 0 8px">
+        You do not need a PhD. Grab a phone calculator. Keep units straight.
+        Goal: see whether a force you care about (Exodus claim, or the toy F_net on this page) could come from tunneling electrons — or whether the sim is only an educational cartoon.
+      </p>
+
+      <h3>Units cheat-sheet (dimensional analysis)</h3>
+      <p style="margin:0 0 8px">
+        Force F is in <b>newtons</b> (N). 1&nbsp;mN = 0.001&nbsp;N. 1&nbsp;μN = 0.000001&nbsp;N.<br/>
+        Current I is in <b>amperes</b> (A). 1&nbsp;mA = 0.001&nbsp;A. 1&nbsp;μA = 0.000001&nbsp;A.<br/>
+        Voltage V in <b>volts</b>. Power P = I×V in <b>watts</b> (W).<br/>
+        Speed of light c ≈ <b>3×10<sup>8</sup></b> m/s. Electron charge e ≈ <b>1.6×10<sup>−19</sup></b> C.
+      </p>
+
+      <div class="step">
+        <b class="num">Step 1.</b> Write the <b>target force</b> you are testing against.<br/>
+        Example claim ballpark: F<sub>claim</sub> ≈ 1&nbsp;mN = <code>0.001</code> N
+        (or 5–10&nbsp;mN if you use the higher public secondary reports).
+      </div>
+      <div class="step">
+        <b class="num">Step 2.</b> Guess a <b>leak / tunneling current</b> after the supply is removed
+        (or use a measured microammeter reading if you have one).<br/>
+        Conservative film capacitor: I ≈ 1&nbsp;μA = <code>1e-6</code> A.
+        Generous “leaky” case: I ≈ 1&nbsp;mA = <code>1e-3</code> A.
+      </div>
+      <div class="step">
+        <b class="num">Step 3A — electron recoil (classical particles).</b><br/>
+        Each electron carries tiny momentum. Rough napkin form:<br/>
+        <code>F_e ≈ (I / e) × p_e</code> with <code>p_e ≈ √(2 m K)</code>.<br/>
+        Easier: at K~50&nbsp;eV, order of magnitude is about
+        <code>F_e ~ (I in amperes) × 2×10<sup>−8</sup></code> N
+        (because 1&nbsp;mA → ~0.02&nbsp;μN).<br/>
+        So: I = 1e-3 → F_e ~ <code>2e-8</code> N = 0.02&nbsp;μN.
+      </div>
+      <div class="step">
+        <b class="num">Step 3B — absolute ceiling if all leak power becomes momentum at light speed.</b><br/>
+        Dimensions: power/speed = force. <code>F ≤ P / c = (I × V) / c</code>.<br/>
+        Example: I=0.001&nbsp;A, V=2000&nbsp;V → P=2&nbsp;W →
+        F ≤ 2 / 3e8 ≈ <code>7e-9</code> N ≈ 0.007&nbsp;μN.
+      </div>
+      <div class="step">
+        <b class="num">Step 4 — compare (the ballpark test).</b><br/>
+        Ratio R = F<sub>claim</sub> / F<sub>your formula</sub>.<br/>
+        If R ≈ 1–10: same order of magnitude (ballpark).<br/>
+        If R ≈ 100–1000: off by a lot; story needs another channel.<br/>
+        If R ≈ 10<sup>4</sup>–10<sup>9</sup>: <b>not in the ballpark</b> for that mechanism.<br/>
+        Example: 0.001&nbsp;N / 2e-8&nbsp;N ≈ <b>50,000</b> → tunneling-electron recoil is not in the ballpark for a 1&nbsp;mN claim.
+      </div>
+      <div class="step">
+        <b class="num">Step 5 — what about area and Kapton thickness?</b><br/>
+        Area A: total current often scales ~like A (more paths). That changes I, not the formula shape.<br/>
+        Thickness d: E = V/d; tunneling probability is wildly sensitive to d (exponential). Still, F_e and P/c only grow as I or I×V grow.<br/>
+        Asymmetry η: can change <i>which face</i> leaks more; it does not turn 0.02&nbsp;μN into millinewtons by itself.
+      </div>
+      <div class="step">
+        <b class="num">Step 6 — what about the toy F_net on this page?</b><br/>
+        The ON/OFF button shows an <b>educational</b> μN-scale number when tunneling is “on.”
+        That number is <b>not</b> fitted to Exodus. Treat it as a cartoon of bookkeeping direction
+        (F_net can be nonzero if a continuity remainder exists), not as a lab prediction.
+        Ballpark test for the <i>sim</i>: if you turn tunneling OFF, F_net should go to ~0 (classical null). If ON stays huge while your napkin F_e and P/c are tiny, the sim is illustrating a <span class="tag hyp">HYP</span> SLW channel — not proving tunneling electrons supply Exodus thrust.
+      </div>
+
+      <div class="judge">
+        <b>Judgment rule:</b> napkin math that stays within about a factor of ten of a claim is “in the ballpark.”
+        Tunneling-electron recoil and P/c vs public mN-class Exodus reports fail that test by many orders.
+        A different mechanism (e.g. asymmetric electrostatic pressure, or a hypothesized SLW field-momentum channel with unknown amplitudes) would need its <i>own</i> napkin formula — do not reuse F_e for that.
+      </div>
+    </div>
   </div>
 
   <p class="more">
