@@ -176,24 +176,36 @@
 
     <div class="exodus" id="exodus-match">
       <h2 style="margin:0 0 8px;font-size:14px;color:var(--qed);text-transform:none;letter-spacing:0">Does this match Exodus published thrust?</h2>
-      <p style="margin:0 0 8px">
-        The <b>integrated effect</b> of total quantum tunneling
-        (∫ |dQ/dt|<sub>tunnel</sub> dt or a toy σ-driven leak)
-        <i>could hypothetically</i> supply a time-integrated SLW momentum flux whose recoil is a
-        <b>candidate bookkeeping channel</b> for a net impulse on the craft.
+      <p style="margin:0 0 8px;color:#fde68a">
+        <b style="color:#86efac">Order-of-magnitude answer: No — not via quantum-tunneling electron momentum, and not via “all leak power → momentum at c.”</b>
+        Public secondary reports of Exodus thrust are roughly <b>~0.3–0.4&nbsp;mN</b> (earlier) to <b>~5–10&nbsp;mN</b> (later) — theirs / not verified here
+        (<a href="https://ept.space" rel="noopener noreferrer" target="_blank">ept.space</a>; news summaries).
+        Exact Exodus plate areas and Kapton (or other) thicknesses are <b>not fully public</b>; we use thin-film Kapton-class ranges (~7.5–125&nbsp;μm, κ≈3.4) and cm²–scale electrodes as geometry brackets only.
       </p>
       <p style="margin:0 0 8px">
-        Whether that matches <b>published Exodus / ept.space</b> asymmetric-capacitor total thrust
-        is <b>not demonstrated here</b>. We do not fit σ to their thrust number.
-        Observed thrust claims on their public materials are theirs / not verified here
-        (<a href="https://ept.space" rel="noopener noreferrer" target="_blank">ept.space</a>).
+        <b>1) Classical tunneling / field-emission recoil.</b>
+        Electrons that tunnel carry tiny momentum. Roughly F<sub>e</sub> ≈ (I/e)·p<sub>e</sub> with p<sub>e</sub>=√(2mK).
+        Even a generous leak <b>I = 1&nbsp;mA</b> at K~50&nbsp;eV gives only ~<b>0.02&nbsp;μN</b> — about <b>10<sup>4</sup>–10<sup>6</sup>× too small</b> vs claimed mN-class thrust.
+        At microamps (more typical for a “good” dielectric), F<sub>e</sub> is nano- to pico-newtons.
       </p>
-      <p style="margin:0">
-        <b>Status:</b> <b>“not forbidden”</b> by this EED↔QED³ map
-        if a real continuity remainder exists after isolation —
-        vs <b>not supported as a quantitative match</b> to published thrust
-        without amplitudes + measured leak/tunnel rates.
-        Warm skepticism. No breakthrough claim.
+      <p style="margin:0 0 8px">
+        <b>2) Optimistic bound: convert all electrical leak power to momentum at c</b> (F ≤ P/c = IV/c).
+        Example: 2&nbsp;kV × 1&nbsp;mA → 2&nbsp;W → F ≤ ~7&nbsp;nN (~0.007&nbsp;μN).
+        To reach <b>1&nbsp;mN</b> by P/c alone you would need ~<b>300&nbsp;kW</b> of continuous leak power — not what a small stacked film capacitor draws after the supply is removed.
+      </p>
+      <p style="margin:0 0 8px">
+        <b>3) Size, area asymmetry, dielectric thickness/type.</b>
+        Thinner Kapton / higher V raises E = V/d and can raise tunneling probability <i>exponentially</i>, and larger area raises total leak current ~linearly with area.
+        That can change I a lot — but F<sub>e</sub> and P/c still scale only with I (or IV).
+        Face-area asymmetry (η) can bias <i>where</i> leak or field is stronger; it does <b>not</b> multiply electron momentum by 10<sup>6</sup>.
+        So geometry helps the electrostatic-pressure story Exodus emphasizes; it does <b>not</b> make integrated tunneling-electron thrust “add up” to their claimed totals.
+      </p>
+      <p style="margin:0 0 8px">
+        <b>4) Different channel (not “tunneling electrons add up”).</b>
+        One-sided electrostatic pressure scale ½ε₀E²A on thin films can be large on paper; Exodus’s public patents stress asymmetric electrostatic pressure / dielectrics, not a measured ∫tunneling-electron recoil.
+        Our SLW map (g<sub>SLW</sub>=ε₀CE from a continuity remainder) is a <span class="tag hyp">HYP</span> bookkeeping idea —
+        <b>“not forbidden”</b> if a real remainder exists, but <b>not a quantitative match</b> to published thrust from integrating tunneling alone.
+        We do not fit σ to their thrust number. Warm skepticism. No breakthrough claim.
       </p>
     </div>
   </div>
