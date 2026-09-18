@@ -87,6 +87,24 @@
   .glossary dd{margin:0 0 6px;padding-left:0}
   .glossary .g-lead{margin:0 0 8px;color:var(--slw,#5eead4);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
 
+
+  .finding{
+    margin:12px 16px 0;padding:14px 16px;
+    border:2px solid #34d399;border-radius:12px;
+    background:linear-gradient(160deg,#0a1f18 0%,#12241f 55%,#0f1528 100%);
+    box-shadow:0 0 0 1px rgba(52,211,153,.25), 0 12px 40px rgba(0,0,0,.35);
+  }
+  .finding .kicker{
+    display:inline-block;font-size:10px;font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;color:#0b1020;background:#34d399;
+    padding:3px 8px;border-radius:999px;margin:0 0 8px;
+  }
+  .finding h2{margin:0 0 8px;font-size:16px;color:#86efac;text-transform:none;letter-spacing:0;line-height:1.35}
+  .finding p{margin:0;color:#d1fae5;font-size:13.5px;line-height:1.55}
+  .finding .preset{margin-top:10px;padding:8px 10px;background:rgba(0,0,0,.28);border:1px solid #2a6b5c;border-radius:8px;font-size:13px;color:#a7f3d0}
+  .finding .preset b{color:#ecfdf5}
+  .finding .caveat{margin-top:8px;font-size:12px;color:#fbbf24}
+
 </style>
 </head>
 <body>
@@ -119,6 +137,19 @@
 <div class="full" id="iso600" style="padding-top:12px;padding-bottom:0">
   <div class="card" style="border-color:#2a6b5c;background:linear-gradient(160deg,#141a2e 0%,#12241f 100%)">
     <h2 style="text-transform:none;letter-spacing:0;font-size:15px;color:var(--eed)">Featured · Isolated 600 V (PS removed)</h2>
+
+    <div class="finding" id="finding" style="margin:0 0 12px">
+      <span class="kicker">Educational model finding</span>
+      <h2>Yes — PS off/removed, this toy can show sustained Net Force on the craft/mount.</h2>
+      <p>
+        Preset: <b>Isolated</b> · <b>600 V</b> · η≈<b>0.80</b> · Tunneling · σ≈<b>0.35</b> (walker λ≈0.30 · Γ≈0.45).
+        SLW recoil channel: <b>g_SLW = ε₀ C E</b>. Null (σ=0 / λ=0) → F_net→0.
+      </p>
+      <p class="caveat" style="margin-top:8px">
+        Model finding only when a <span class="tag hyp">HYP</span> continuity remainder is dialed in — not a lab proof of Exodus thrust.
+      </p>
+    </div>
+
     <p style="margin:0 0 10px;color:var(--ink);font-size:14px;font-weight:600;max-width:72ch;line-height:1.45">
       Is there a net force present after the power supply is removed that might be explained by SLW emission and its momentum on the capacitor and spacecraft?
     </p>
