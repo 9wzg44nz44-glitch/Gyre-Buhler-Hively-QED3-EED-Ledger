@@ -87,6 +87,7 @@
     <a href="index.html">Home</a>
     <a href="ledger.html">Ledger</a>
     <a class="active" href="phases.html">Phases</a>
+    <a href="isolated-600.html">Isolated 600 V</a>
     <a href="notes.html">Notes</a>
     <a href="library.html">Library</a>
     <a href="status.html">Status</a>
@@ -103,6 +104,53 @@
   <b>Educational toy — not a derivation of Exodus thrust.</b>
   SI: g_SLW = ε₀ C E; □C = −μ₀(∂tρ+∇·J); TEM C=0; SLW B=0, E∥k, C≠0; SW energy only.
   Hero readout = <b>net force on the craft / mount</b>. If outbound SLW carries +P_field, the structure can show −F_net while P_matter + P_SLW ≈ 0.
+</div>
+
+
+<div class="full" id="iso600" style="padding-top:12px;padding-bottom:0">
+  <div class="card" style="border-color:#2a6b5c;background:linear-gradient(160deg,#141a2e 0%,#12241f 100%)">
+    <h2 style="text-transform:none;letter-spacing:0;font-size:15px;color:var(--eed)">Featured · Isolated 600 V (PS removed)</h2>
+    <p style="margin:0 0 10px;color:var(--ink);font-size:14px;font-weight:600;max-width:72ch;line-height:1.45">
+      Is there a net force present after the power supply is removed that might be explained by SLW emission and its momentum on the capacitor and spacecraft?
+    </p>
+    <p style="margin:0 0 8px;color:var(--muted);font-size:12.5px">
+      Suggested preset: <span class="tag ex">Isolated</span>
+      · V=<b style="color:var(--ink)">600 V</b> (0.6 kV)
+      · η≈<b style="color:var(--ink)">0.80</b>
+      · λ≈<b style="color:var(--ink)">0.30</b>
+      · Γ≈<b style="color:var(--ink)">0.45</b>
+      · mechanism=<b style="color:var(--ink)">Tunneling</b>
+      <span class="tag hyp">HYP</span>
+      (alternatives: Pair production toy · Sub-Heisenberg continuity — more speculative)
+    </p>
+    <p style="margin:0 0 10px;color:var(--muted);font-size:12.5px;line-height:1.5">
+      <b style="color:var(--ink)">Classical vs HYP:</b>
+      Classically static + J=0 ⇒ no SLW / F_net→0.
+      A continuity remainder (tunneling / pair-proxy / sub-Heisenberg) is <span class="tag hyp">HYP</span> and might source □C → possible g_SLW = ε₀CE recoil — educational only.
+    </p>
+    <details style="margin:0 0 10px">
+      <summary style="cursor:pointer;color:var(--qed);font-size:12.5px;font-weight:600">What could source SLW after PS removed?</summary>
+      <p style="margin:8px 0 6px;color:var(--muted);font-size:12.5px">
+        <b style="color:var(--ink)">Classically</b> (static, J=0, continuity holds): ∂tρ+∇·J=0 → □C has no source → no SLW, F_net→0.
+      </p>
+      <ol style="margin:0;padding-left:1.2rem;color:var(--muted);font-size:12.5px;line-height:1.5">
+        <li>Quantum tunneling / field emission / leakage between asymmetric plates (slow dQ/dt) <span class="tag hyp">HYP</span></li>
+        <li>Bound-charge rearrangement / dielectric relaxation on the faces <span class="tag hyp">HYP</span></li>
+        <li>Corona / micro-discharge / residual gas ionization <span class="tag" style="border-color:#7f1d1d;color:#fca5a5">lab confounder</span></li>
+        <li>Surface patch potentials / contact-potential drifts <span class="tag hyp">HYP</span></li>
+        <li>Hively “sub-Heisenberg times” local charge-conservation remainder <span class="tag hyp">HYP</span></li>
+        <li>Virtual pair / vacuum polarization toy proxies <span class="tag hyp">HYP</span> — not Schwinger</li>
+        <li>Buhler α<sup>3/2</sup> three-state / selection-rule remainder mapped onto □C <span class="tag hyp">HYP</span></li>
+        <li>Mechanical vibration / piezo / microphonic dC/dt of geometry <span class="tag ex">mundane classical</span></li>
+        <li>Thermal Johnson noise / charge flicker on plates</li>
+        <li>Incomplete isolation — residual PS or cable displacement current <span class="tag" style="border-color:#7f1d1d;color:#fca5a5">artifact</span></li>
+      </ol>
+    </details>
+    <p style="margin:0;display:flex;flex-wrap:wrap;gap:8px">
+      <a class="primary" href="isolated-600.html" style="display:inline-block;padding:8px 14px;border-radius:8px;background:#12352e;border:1px solid #2a6b5c;color:var(--eed);text-decoration:none;font-weight:600">Open 600 V isolated simulator</a>
+      <button type="button" id="btnLoadIso600" style="padding:8px 14px">Load preset into walker below</button>
+    </p>
+  </div>
 </div>
 
 <div class="wrap">
@@ -155,7 +203,7 @@
       <div class="grid2">
         <div class="kpi"><span>Phase</span><b id="kPhase">Off</b></div>
         <div class="kpi"><span>Q / Q_max</span><b id="kQ">0.00</b></div>
-        <div class="kpi"><span>V plates (kV)</span><b id="kVolt">0.00</b></div>
+        <div class="kpi"><span>V plates</span><b id="kVolt">0.00</b></div>
         <div class="kpi"><span>|C| peak</span><b id="kC">0</b></div>
         <div class="kpi"><span>Continuity |S|</span><b id="kS">0</b></div>
         <div class="kpi"><span>dQ/dt (rel.)</span><b id="kDQ">0</b></div>
@@ -260,7 +308,7 @@
 <footer>
   Dan Britton · BrittonSolutions@icloud.com · educational.<br/>
   Research instrument only — not a derivation of Exodus thrust · not peer-reviewed · not an endorsement of any vendor or claim.<br/>
-  <a href="index.html">Home</a> · <a href="ledger.html">Ledger</a> · <a href="phases.html">Phases</a> · <a href="notes.html">Notes</a> · <a href="library.html">Library</a> · <a href="status.html">Status</a>
+  <a href="index.html">Home</a> · <a href="ledger.html">Ledger</a> · <a href="phases.html">Phases</a> · <a href="isolated-600.html">Isolated 600 V</a> · <a href="notes.html">Notes</a> · <a href="library.html">Library</a> · <a href="status.html">Status</a>
 </footer>
 
 <script>
@@ -335,7 +383,8 @@
 
   function syncLabels(){
     $("vEta").textContent = (+$("eta").value).toFixed(2);
-    $("vV").textContent = (+$("volt").value).toFixed(1);
+    const kv = +$("volt").value;
+    $("vV").textContent = kv < 1 ? (kv*1000).toFixed(0) + " V" : kv.toFixed(1);
     $("vLam").textContent = (+$("lam").value).toFixed(2);
     $("vGam").textContent = (+$("gamma").value).toFixed(2);
   }
@@ -483,7 +532,7 @@
     $("kP").style.color = Math.abs(Ptot) < Math.max(1e-10, 0.15*(Math.abs(accP)+Math.abs(g_slw))) ? "var(--ok)" : "var(--warn)";
     $("kW").textContent = fmt((Math.abs(fluxL)+Math.abs(fluxR))*1e6, 3);
     $("kQ").textContent = fmt(Q/Qmax, 3);
-    $("kVolt").textContent = fmt(Vnow/1e3, 2);
+    $("kVolt").textContent = Vnow < 1000 ? (fmt(Vnow, 0) + " V") : (fmt(Vnow/1e3, 2) + " kV");
     $("kC").textContent = fmt(maxC, 3);
     $("kS").textContent = fmt(maxS, 3);
     $("kDQ").textContent = fmt(dQdt / Math.max(1e-12, Qmax), 3);
@@ -606,6 +655,26 @@
     if (running) step(wallDt);
     requestAnimationFrame(loop);
   }
+
+  $("btnLoadIso600").onclick = ()=>{
+    $("eta").value = "0.80";
+    $("volt").value = "0.6";
+    $("lam").value = "0.30";
+    $("gamma").value = "0.45";
+    syncLabels();
+    C.fill(0); Ct.fill(0); EL.fill(0); t=0; accP=0; phaseT=0; lastFnet=0; demo=false;
+    setPhase("isolated", false);
+    // Q ≈ Qmax at 0.6 kV
+    const Vtarget = 0.6 * 1e3;
+    const gap = plateR - plateL;
+    Qmax = Math.max(1e-12, eps0 * (Vtarget/gap) * gap);
+    Q = Qmax;
+    running = true;
+    $("btnRun").textContent = "Pause";
+    step(0.016);
+    document.getElementById("heroForce").scrollIntoView({behavior:"smooth", block:"start"});
+  };
+
   syncLabels();
   setPhase("off", false);
   step(0.016);
