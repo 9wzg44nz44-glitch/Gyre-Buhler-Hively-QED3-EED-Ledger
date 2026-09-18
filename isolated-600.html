@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<title>Isolated 600 V · SLW after PS removed? · GYRE Ledger</title>
+<meta name="description" content="Educational simulator: power supply removed, capacitor pre-charged to 600 V DC. Asks whether a net force might be explained by SLW emission. Warm skepticism — HYP mechanisms only."/>
+<style>
+  :root{
+    --bg:#0b1020; --bg2:#0f1528; --panel:#141a2e; --ink:#e8eefc; --muted:#8b97b8;
+    --line:#243056; --ced:#7aa2ff; --eed:#3ee0b8; --qed:#ffb14a;
+    --slw:#5eead4; --sw:#c4b5fd; --tem:#60a5fa; --warn:#fb7185;
+    --ok:#34d399; --plate:#94a3b8;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+  .sticky{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);background:rgba(11,16,32,.92);border-bottom:1px solid var(--line)}
+  .sticky-inner{max-width:1100px;margin:0 auto;padding:.65rem 16px;display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:center;justify-content:space-between}
+  .brand{font-size:14px;letter-spacing:.02em;color:var(--ink);text-decoration:none;font-weight:600}
+  .brand span{color:var(--eed)}
+  .nav{display:flex;flex-wrap:wrap;gap:.45rem .8rem;font-size:12px}
+  .nav a{color:var(--muted);text-decoration:none}
+  .nav a:hover,.nav a.active{color:var(--ink)}
+  .nav a.active{color:var(--eed)}
+  header{padding:14px 16px 8px;border-bottom:1px solid var(--line)}
+  header h1{margin:0;font-size:17px;letter-spacing:.02em}
+  header .lede{margin:6px 0 0;color:var(--eed);font-size:14px;font-weight:600;max-width:72ch}
+  header .sub{margin:4px 0 0;color:var(--muted);font-size:12px;max-width:72ch}
+  .banner{margin:10px 16px 0;padding:8px 10px;border:1px solid #5b3b16;background:#1a140c;color:#fbbf24;font-size:12px;border-radius:8px;line-height:1.5}
+  .banner b{color:#fde68a}
+  .lock{margin:10px 16px 0;padding:8px 10px;border:1px solid #2a6b5c;background:#0f1f1c;color:var(--eed);font-size:12px;border-radius:8px;line-height:1.5}
+  .lock b{color:#b6ffe9}
+  .wrap{display:grid;grid-template-columns:1fr;gap:10px;padding:10px 12px 24px;max-width:1100px;margin:0 auto}
+  @media(min-width:980px){.wrap{grid-template-columns:340px 1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+  .card h2{margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  .card p,.card li{color:var(--muted);font-size:13px}
+  label{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:7px 0;font-size:12px;color:var(--muted)}
+  label span.v{color:var(--ink);font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
+  input[type=range]{width:100%;accent-color:var(--eed)}
+  button{background:#0f1528;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 10px;cursor:pointer;font-size:12px}
+  button.primary{background:#12352e;border-color:#2a6b5c;color:var(--eed);font-weight:600}
+  button.null{border-color:#5b3b16;color:#fbbf24}
+  .row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  canvas{width:100%;height:auto;aspect-ratio:900/320;background:#070b16;border-radius:8px;border:1px solid var(--line);display:block}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 12px;margin-top:6px;font-size:11px;color:var(--muted)}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .kpi{background:#0f1528;border:1px solid var(--line);border-radius:8px;padding:8px}
+  .kpi b{display:block;font-size:15px;font-variant-numeric:tabular-nums}
+  .kpi span{color:var(--muted);font-size:11px}
+  .hero{
+    background:linear-gradient(160deg,#0f1528 0%,#12241f 100%);
+    border:1px solid #2a6b5c;border-radius:12px;padding:14px 14px 12px;margin:0 0 10px;
+  }
+  .hero .label{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--eed);margin:0 0 4px}
+  .hero .val{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.01em;line-height:1.15}
+  .hero .dir{font-size:12px;color:var(--muted);margin-top:4px}
+  .hero .pair{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+  .hero .mini{background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:8px;padding:8px}
+  .hero .mini span{display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+  .hero .mini b{display:block;font-size:14px;font-variant-numeric:tabular-nums;margin-top:2px}
+  .tag{display:inline-block;font-size:10px;padding:1px 6px;border-radius:999px;border:1px solid var(--line);color:var(--muted);vertical-align:middle}
+  .tag.hyp{border-color:#7c4a12;color:#fbbf24}
+  .tag.ex{border-color:#14532d;color:#86efac}
+  .tag.warn{border-color:#7f1d1d;color:#fca5a5}
+  .locked{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;background:#0f1528;border:1px solid var(--line);border-radius:8px;margin:7px 0;font-size:12px;color:var(--muted)}
+  .locked b{color:var(--ink);font-variant-numeric:tabular-nums}
+  .mech{display:flex;flex-direction:column;gap:6px;margin:8px 0}
+  .mech label.radio{display:flex;align-items:flex-start;gap:8px;margin:0;justify-content:flex-start;cursor:pointer;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:#0f1528}
+  .mech label.radio:hover{border-color:#2a6b5c}
+  .mech label.radio.on{border-color:#2a6b5c;background:#12352e}
+  .mech label.radio input{margin-top:3px}
+  .mech .mt{color:var(--ink);font-size:12px;font-weight:600}
+  .mech .md{color:var(--muted);font-size:11px;margin-top:2px}
+  .full{max-width:1100px;margin:0 auto;padding:0 12px 24px}
+  footer{color:var(--muted);font-size:11px;padding:0 16px 20px;max-width:1100px;margin:0 auto}
+  footer a{color:var(--eed)}
+  .note{font-size:12px;color:var(--muted);margin:6px 0 0}
+  ul.clean{margin:.35rem 0;padding-left:1.15rem}
+  ul.clean li{margin:.35rem 0}
+  .src-list{list-style:none;padding:0;margin:0}
+  .src-list li{padding:8px 10px;margin:0 0 6px;background:#0f1528;border:1px solid var(--line);border-radius:8px;font-size:12.5px;color:var(--muted);line-height:1.45}
+  .src-list li b{color:var(--ink)}
+  .src-null{border-color:#14532d !important;background:#0c1a14 !important}
+  .answer{border:1px solid #5b3b16;background:#1a140c;border-radius:10px;padding:12px 14px;margin:0 0 12px}
+  .answer h2{color:#fbbf24;margin:0 0 6px;font-size:13px;text-transform:none;letter-spacing:0}
+  .answer p{color:#fde68a;margin:0;font-size:13.5px;line-height:1.55}
+</style>
+</head>
+<body>
+<div class="sticky"><div class="sticky-inner">
+  <a class="brand" href="index.html">GYRE Ledger <span>·</span> QED³ ↔ EED</a>
+  <nav class="nav">
+    <a href="index.html">Home</a>
+    <a href="ledger.html">Ledger</a>
+    <a href="phases.html">Phases</a>
+    <a class="active" href="isolated-600.html">Isolated 600 V</a>
+    <a href="notes.html">Notes</a>
+    <a href="library.html">Library</a>
+    <a href="status.html">Status</a>
+  </nav>
+</div></div>
+
+<header>
+  <h1>Isolated 600 V · power supply removed</h1>
+  <p class="lede">Is there a net force present after the power supply is removed that might be explained by SLW emission and its momentum on the capacitor and spacecraft?</p>
+  <p class="sub">Focused educational toy — not the full phase walker. Voltage locked at 600 V DC. Only hypothesized continuity remainders can source □C. Warm skepticism. No breakthrough claims.</p>
+</header>
+
+<div class="lock">
+  <b>Locked assumptions:</b> Isolated (PS removed) · plates pre-charged to <b>600 V DC</b> · no supply current · only HYP continuity remainders below.
+</div>
+
+<div class="banner">
+  <b>Educational toy — not a derivation of Exodus thrust.</b>
+  Classically static + J=0 ⇒ ∂tρ+∇·J=0 ⇒ □C has no source ⇒ no SLW, F_net→0.
+  Each mechanism below is a hypothesized remainder that <i>might</i> source C → possible g_SLW = ε₀ C E recoil. Pair production and sub-Heisenberg are <b>more</b> speculative than tunneling.
+</div>
+
+<div class="wrap">
+  <div>
+    <div class="hero" id="heroForce">
+      <div class="label">Net force on craft / mount (educational μN scale)</div>
+      <div class="val" id="kF">0.000</div>
+      <div class="dir" id="kFdir">Direction: — · isolated · V=600 V</div>
+      <div class="pair">
+        <div class="mini"><span>P_matter (∫F dt)</span><b id="kPmat">0</b></div>
+        <div class="mini"><span>P_SLW (∫ ε₀ C E)</span><b id="kPslw">0</b></div>
+        <div class="mini"><span>Residual P_mat+P_SLW</span><b id="kP">0</b></div>
+        <div class="mini"><span>SLW power out (μW scale)</span><b id="kW">0</b></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Controls</h2>
+      <div class="locked"><span>Plate voltage (locked)</span><b>600 V DC</b></div>
+      <label>Asymmetry η <span class="v" id="vEta">0.80</span></label>
+      <input id="eta" type="range" min="0" max="1" step="0.01" value="0.80"/>
+
+      <p style="margin:10px 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">HYP mechanism</p>
+      <div class="mech" id="mechBox">
+        <label class="radio on" data-m="tunnel">
+          <input type="radio" name="mech" value="tunnel" checked/>
+          <div>
+            <div class="mt">Tunneling <span class="tag hyp">HYP</span></div>
+            <div class="md">Slow leak ∝ σ·Q · continuity from |dQ/dt| — least speculative of the three toys</div>
+          </div>
+        </label>
+        <label class="radio" data-m="pair">
+          <input type="radio" name="mech" value="pair"/>
+          <div>
+            <div class="mt">Pair production (HYP) <span class="tag hyp">HYP</span> <span class="tag warn">toy proxy</span></div>
+            <div class="md">Tiny oscillatory/stochastic-ish source ∝ σ·η·E²-ish — do <b>not</b> claim Schwinger rates</div>
+          </div>
+        </label>
+        <label class="radio" data-m="subh">
+          <input type="radio" name="mech" value="subh"/>
+          <div>
+            <div class="mt">Sub-Heisenberg continuity (HYP) <span class="tag hyp">HYP</span></div>
+            <div class="md">Brief/bursty continuity remainder ∝ σ even at nearly fixed Q — Hively-style discussion proxy, not a derivation</div>
+          </div>
+        </label>
+      </div>
+
+      <label>Mechanism strength σ <span class="v" id="vSig">0.35</span></label>
+      <input id="sig" type="range" min="0" max="1" step="0.01" value="0.35"/>
+      <div class="row">
+        <button class="primary" id="btnRun" type="button">Pause</button>
+        <button id="btnReset" type="button">Reset</button>
+        <button class="null" id="btnNull" type="button">Compare null (σ=0)</button>
+      </div>
+      <p class="note" id="mechHint">Tunneling: slow leak keeps |dQ/dt|&gt;0 → continuity remainder can source □C. σ=0 → truly static → F_net→0.</p>
+    </div>
+
+    <div class="card" style="margin-top:10px">
+      <h2>Other KPIs</h2>
+      <div class="grid2">
+        <div class="kpi"><span>Regime</span><b>Isolated</b></div>
+        <div class="kpi"><span>Q / Q_max</span><b id="kQ">1.00</b></div>
+        <div class="kpi"><span>V plates</span><b>600 V</b></div>
+        <div class="kpi"><span>|C| peak</span><b id="kC">0</b></div>
+        <div class="kpi"><span>Continuity |S|</span><b id="kS">0</b></div>
+        <div class="kpi"><span>dQ/dt (rel.)</span><b id="kDQ">0</b></div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="card">
+      <h2>1-D plates · E · C · F_net on mount</h2>
+      <canvas id="cv" width="900" height="320"></canvas>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--plate)"></i>plates / craft mount</span>
+        <span><i class="dot" style="background:var(--tem)"></i>E_TEM</span>
+        <span><i class="dot" style="background:var(--slw)"></i>C / E_SLW</span>
+        <span><i class="dot" style="background:var(--qed)"></i>S = ∂tρ+∇·J</span>
+        <span><i class="dot" style="background:var(--warn)"></i>F_net arrow on craft</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="full">
+  <div class="answer">
+    <h2>Classical vs HYP (one line)</h2>
+    <p>
+      <b>Classically:</b> static + J=0 ⇒ no SLW / F_net→0.
+      <b>HYP:</b> a continuity remainder (tunneling, pair-proxy, or sub-Heisenberg burst) can source □C → possible g_SLW = ε₀ C E recoil on the craft/mount — educational map only, not a proof.
+    </p>
+  </div>
+
+  <div class="card" id="source-list">
+    <h2>What could source SLW after PS removed?</h2>
+    <p style="margin:0 0 10px">
+      <b style="color:var(--ink)">Classically</b> (static, J=0, continuity holds): ∂tρ+∇·J=0 → □C has no source → no SLW, F_net→0.
+    </p>
+    <ul class="src-list">
+      <li class="src-null"><b>Classical null</b> <span class="tag ex">exact</span> — Truly static isolated capacitor with perfect continuity: no source for C, no outbound SLW momentum, F_net→0. Use <b>Compare null (σ=0)</b> to see this.</li>
+    </ul>
+    <p style="margin:10px 0 6px;font-size:12px;color:var(--muted)">Possible hypothesized sources of a continuity remainder (all <span class="tag hyp">HYP</span> unless noted):</p>
+    <ul class="src-list">
+      <li><b>1. Quantum tunneling / field emission / leakage</b> between asymmetric plates (slow dQ/dt) <span class="tag hyp">HYP</span> — selectable above as Tunneling.</li>
+      <li><b>2. Bound-charge rearrangement / dielectric relaxation</b> on the faces <span class="tag hyp">HYP</span></li>
+      <li><b>3. Corona / micro-discharge / residual gas ionization</b> <span class="tag warn">lab confounder</span> — not vacuum SLW proof</li>
+      <li><b>4. Surface patch potentials / contact-potential drifts</b> <span class="tag hyp">HYP</span></li>
+      <li><b>5. Hively “sub-Heisenberg times” local charge-conservation remainder</b> <span class="tag hyp">HYP</span> — discussion-level; selectable above</li>
+      <li><b>6. Virtual pair / vacuum polarization toy proxies</b> <span class="tag hyp">HYP</span> <span class="tag warn">highly speculative</span> — not a Schwinger claim; selectable as Pair production toy</li>
+      <li><b>7. Buhler α<sup>3/2</sup> three-state / selection-rule remainder</b> mapped onto □C <span class="tag hyp">HYP dictionary</span></li>
+      <li><b>8. Mechanical vibration / piezo / microphonic dC/dt</b> of geometry <span class="tag ex">mundane classical</span></li>
+      <li><b>9. Thermal Johnson noise / charge flicker</b> on plates <span class="tag hyp">HYP</span> / classical noise</li>
+      <li><b>10. Incomplete isolation</b> — residual PS or cable displacement current <span class="tag warn">experimental artifact</span></li>
+    </ul>
+    <p class="note">Warm skepticism: making a source visible on this canvas does not establish laboratory force, Exodus thrust, or that any of (1)–(7) actually operate at 600 V.</p>
+  </div>
+
+  <div class="card">
+    <h2>Suggested settings for this search</h2>
+    <ul class="clean">
+      <li><b>Isolated</b> · V = <b>600 V</b> (0.6 kV) · η ≈ <b>0.80</b></li>
+      <li>Mechanism = <b>Tunneling</b> (try Pair / Sub-Heisenberg as more speculative alternatives)</li>
+      <li>σ ≈ <b>0.35</b> (then hit Compare null → σ=0 to watch F_net→0)</li>
+      <li>On the full phases walker: λ ≈ 0.30 · Γ ≈ 0.45 · Q ≈ Qmax</li>
+    </ul>
+    <p class="note" style="margin-top:10px">
+      <a href="phases.html#iso600" style="display:inline-block;padding:8px 14px;border-radius:8px;background:#12352e;border:1px solid #2a6b5c;color:var(--eed);text-decoration:none;font-weight:600">Back to phases walker</a>
+      <a href="ledger.html" style="display:inline-block;padding:8px 14px;border-radius:8px;border:1px solid var(--line);color:var(--muted);text-decoration:none;margin-left:6px">Full ledger</a>
+    </p>
+  </div>
+</div>
+
+<footer>
+  Dan Britton · BrittonSolutions@icloud.com · educational.<br/>
+  Research instrument only — not a derivation of Exodus thrust · not peer-reviewed · not an endorsement of any vendor or claim.<br/>
+  <a href="index.html">Home</a> · <a href="ledger.html">Ledger</a> · <a href="phases.html">Phases</a> · <a href="isolated-600.html">Isolated 600 V</a> · <a href="notes.html">Notes</a> · <a href="library.html">Library</a> · <a href="status.html">Status</a>
+</footer>
+
+<script>
+(function(){
+  const c0 = 2.99792458e8, mu0 = 4*Math.PI*1e-7, eps0 = 1/(mu0*c0*c0);
+  const N = 200, L = 2.0, dx = (2*L)/(N-1);
+  const xs = Float64Array.from({length:N}, (_,i)=> -L + i*dx);
+  const plateL = -0.18, plateR = 0.18;
+  const Vfixed = 600; // volts, locked
+  const dt = 0.4 * dx / c0;
+
+  let C = new Float64Array(N), Ct = new Float64Array(N);
+  let EL = new Float64Array(N);
+  let t = 0, running = true;
+  let Q = 1, Qmax = 1;
+  let accP = 0;
+  let burstClock = 0;
+  let mech = "tunnel";
+
+  const $ = id => document.getElementById(id);
+  function fmt(x, d=3){
+    if (!isFinite(x)) return "—";
+    const a = Math.abs(x);
+    if (a !== 0 && (a < 1e-3 || a >= 1e4)) return x.toExponential(d);
+    return x.toFixed(d);
+  }
+  function sanitize(arr){
+    for (let i=0;i<arr.length;i++) if (!isFinite(arr[i])) arr[i]=0;
+  }
+
+  function srcProfile(eta){
+    const s = new Float64Array(N);
+    for (let i=0;i<N;i++){
+      const x = xs[i];
+      const left = Math.exp(-(((x-plateL)/0.06)**2));
+      const right= Math.exp(-(((x-plateR)/0.06)**2));
+      s[i] = (1+eta)*left - (1-eta)*right;
+    }
+    return s;
+  }
+
+  const HINTS = {
+    tunnel: "Tunneling: slow leak keeps |dQ/dt|>0 → continuity remainder can source □C. σ=0 → truly static → F_net→0.",
+    pair: "Pair production (toy proxy only): oscillatory/stochastic-ish source ∝ σ·η·E²-ish. Not a Schwinger rate claim.",
+    subh: "Sub-Heisenberg continuity (HYP): brief/bursty remainder ∝ σ even at nearly fixed Q — discussion proxy, not a derivation."
+  };
+
+  function syncLabels(){
+    $("vEta").textContent = (+$("eta").value).toFixed(2);
+    $("vSig").textContent = (+$("sig").value).toFixed(2);
+  }
+
+  function setMech(m){
+    mech = m;
+    document.querySelectorAll(".mech label.radio").forEach(lab=>{
+      const on = lab.getAttribute("data-m")===mech;
+      lab.classList.toggle("on", on);
+      const inp = lab.querySelector("input");
+      if (inp) inp.checked = on;
+    });
+    $("mechHint").textContent = HINTS[mech] || "";
+  }
+
+  function step(wallDt){
+    const eta = +$("eta").value;
+    const sig = +$("sig").value;
+    const gap = plateR - plateL;
+    Qmax = Math.max(1e-12, eps0 * (Vfixed/gap) * gap);
+    // Keep Q near Qmax for 600 V readout; tunneling slowly bleeds educationally
+    if (Q <= 0) Q = Qmax;
+    const wdt = Math.min(0.05, Math.max(0.001, wallDt || 0.016));
+
+    let dQdt = 0;
+    let Samp = 0;
+    const DEMO_SCALE = 90;
+    const E0base = Vfixed / gap;
+    // Refresh Q toward Qmax so voltage stays ~600 V educationally unless tunneling bleeds
+    if (mech === "tunnel" && sig > 1e-6){
+      dQdt = -sig * 0.28 * Q;
+      Q = Math.max(0.15 * Qmax, Q + dQdt * wdt);
+      // soft top-up so we don't drain to zero instantly in the toy
+      Q += (Qmax - Q) * 0.002 * wdt;
+    } else {
+      Q += (Qmax - Q) * (1 - Math.exp(-wdt / 0.25));
+      dQdt = 0;
+    }
+
+    const Vnow = (Q / Qmax) * Vfixed;
+    const E0 = Vnow / gap;
+    const prof = srcProfile(eta);
+    const Scont = new Float64Array(N);
+
+    if (sig < 1e-6){
+      Samp = 0;
+      dQdt = 0;
+    } else if (mech === "tunnel"){
+      const leakS = Math.abs(dQdt) / Math.max(1e-12, Qmax);
+      Samp = DEMO_SCALE * (0.55 + 0.45*sig) * (leakS + 0.05*sig*eta*(Q/Qmax)) * (eps0 * Math.max(E0, 1));
+    } else if (mech === "pair"){
+      // Toy proxy only — NOT Schwinger. Oscillatory + mild hash ∝ σ·η·E²-ish
+      const Erel = E0 / Math.max(1, E0base);
+      const osc = Math.sin(2*Math.PI*11*t) + 0.35*Math.sin(2*Math.PI*29*t + 0.7);
+      const hash = (Math.sin(t*173.1 + eta*9) + Math.sin(t*311.7))*0.15;
+      Samp = DEMO_SCALE * 0.22 * sig * (0.25 + eta) * (Erel*Erel) * (osc + hash) * (eps0 * Math.max(E0, 1));
+      dQdt = 0.01 * sig * Qmax * osc; // tiny flicker, Q nearly fixed
+    } else if (mech === "subh"){
+      // Brief/bursty continuity remainder even at nearly fixed Q
+      burstClock += wdt;
+      let burst = 0;
+      if (burstClock > 0.55){
+        burst = Math.exp(-(((burstClock - 0.55)/0.08)**2));
+        if (burstClock > 0.9) burstClock = 0;
+      }
+      Samp = DEMO_SCALE * 0.40 * sig * (0.15 + burst*1.4) * (0.4 + 0.6*eta) * (eps0 * Math.max(E0, 1));
+      dQdt = 0.004 * sig * Qmax * burst;
+    }
+
+    for (let i=0;i<N;i++) Scont[i] = Samp * prof[i];
+
+    const sub = 18;
+    for (let s=0;s<sub;s++){
+      const Cxx = new Float64Array(N);
+      for (let i=1;i<N-1;i++) Cxx[i] = (C[i+1]-2*C[i]+C[i-1])/(dx*dx);
+      for (let i=1;i<N-1;i++){
+        const acc = c0*c0*Cxx[i] + c0*c0*mu0*Scont[i];
+        Ct[i] += acc*dt;
+        C[i] += Ct[i]*dt;
+      }
+      C[0]*=0.92; C[N-1]*=0.92; Ct[0]*=0.92; Ct[N-1]*=0.92;
+      t += dt;
+    }
+    // Null: damp leftover C so F_net→0
+    if (sig < 1e-6){
+      for (let i=0;i<N;i++){ C[i]*=0.94; Ct[i]*=0.94; }
+    }
+    sanitize(C); sanitize(Ct);
+
+    const ESLW = new Float64Array(N);
+    let run = 0; ESLW[0]=0;
+    for (let i=1;i<N;i++){
+      run += -0.5*(Ct[i]+Ct[i-1])*dx;
+      ESLW[i] = run;
+    }
+    let m=0; for (let i=0;i<N;i++) m+=ESLW[i]; m/=N;
+    for (let i=0;i<N;i++) ESLW[i]-=m;
+
+    const Estat = new Float64Array(N);
+    for (let i=0;i<N;i++){
+      const x = xs[i];
+      if (x>plateL && x<plateR) Estat[i] = E0*(1 + 0.65*eta*Math.tanh(12*(x)));
+      else Estat[i] = 0;
+      EL[i] = Estat[i] + ESLW[i];
+    }
+
+    let g_slw=0, f_JC=0, f_press=0, f_lor=0, maxC=0, maxS=0;
+    let fluxL=0, fluxR=0;
+    for (let i=1;i<N-1;i++){
+      const Sslw = C[i]*EL[i]/mu0;
+      const gSLW = Sslw/(c0*c0);
+      const onPlate = (Math.abs(xs[i]-plateL)<0.03)||(Math.abs(xs[i]-plateR)<0.03);
+      const Jx = onPlate ? (eps0 * dQdt / Math.max(1e-12,Qmax) * E0 * 0.2 * prof[i]) : 0;
+      const rho = eps0*((EL[i+1]-EL[i-1])/(2*dx) + Ct[i]);
+      const dC = (C[i+1]-C[i-1])/(2*dx);
+      g_slw += gSLW*dx;
+      f_JC += Jx*C[i]*dx;
+      f_press += -(C[i]*dC)/mu0 * dx;
+      f_lor += rho*EL[i]*dx;
+      if (Math.abs(C[i])>maxC) maxC=Math.abs(C[i]);
+      if (Math.abs(Scont[i])>maxS) maxS=Math.abs(Scont[i]);
+    }
+    fluxL = (C[2]*EL[2])/mu0;
+    fluxR = (C[N-3]*EL[N-3])/mu0;
+
+    const Fnet = f_lor + f_JC + f_press;
+    accP += Fnet * wdt;
+    const Ptot = accP + g_slw;
+
+    const FmuN = Fnet * 1e6;
+    $("kF").textContent = fmt(FmuN, 3);
+    $("kF").style.color = Math.abs(FmuN) < 1e-6 ? "var(--muted)" : (FmuN >= 0 ? "var(--ok)" : "var(--warn)");
+    let dirTxt = "Direction: — · isolated · V=600 V · " + mech;
+    if (Math.abs(FmuN) > 1e-6){
+      dirTxt = (FmuN >= 0
+        ? "Direction: → +x (same side as high-|E| face tendency)"
+        : "Direction: ← −x (recoil opposite outbound SLW)")
+        + " · isolated · V=600 V · " + mech;
+    }
+    if (sig < 1e-6){
+      dirTxt += " · σ=0 null → expect F_net→0 (no SLW)";
+    } else {
+      dirTxt += " · σ>0 HYP remainder can sustain residual F_net";
+    }
+    $("kFdir").textContent = dirTxt;
+
+    $("kPmat").textContent = fmt(accP, 3);
+    $("kPslw").textContent = fmt(g_slw, 3);
+    $("kP").textContent = fmt(Ptot, 3);
+    $("kP").style.color = Math.abs(Ptot) < Math.max(1e-10, 0.15*(Math.abs(accP)+Math.abs(g_slw))) ? "var(--ok)" : "var(--warn)";
+    $("kW").textContent = fmt((Math.abs(fluxL)+Math.abs(fluxR))*1e6, 3);
+    $("kQ").textContent = fmt(Q/Qmax, 3);
+    $("kC").textContent = fmt(maxC, 3);
+    $("kS").textContent = fmt(maxS, 3);
+    $("kDQ").textContent = fmt(dQdt / Math.max(1e-12, Qmax), 3);
+    draw(EL, Estat, ESLW, C, Scont, eta, E0, Fnet, sig);
+  }
+
+  function draw(EL, Estat, ESLW, C, Scont, eta, E0, Fnet, sig){
+    const cv=$("cv"), ctx=cv.getContext("2d");
+    const W=cv.width, H=cv.height;
+    ctx.clearRect(0,0,W,H);
+    const xpix = x => (x+L)/(2*L)*W;
+    const mid = H*0.55;
+
+    ctx.strokeStyle="#243056"; ctx.beginPath(); ctx.moveTo(0,mid); ctx.lineTo(W,mid); ctx.stroke();
+
+    const mountY = mid + 78;
+    ctx.fillStyle="#1e293b";
+    ctx.fillRect(xpix(plateL)-20, mountY, xpix(plateR)-xpix(plateL)+40, 14);
+    ctx.strokeStyle="#475569"; ctx.strokeRect(xpix(plateL)-20, mountY, xpix(plateR)-xpix(plateL)+40, 14);
+    ctx.fillStyle="#8b97b8"; ctx.font="11px sans-serif";
+    ctx.fillText("craft / mount", xpix(plateL)-18, mountY + 26);
+
+    ctx.fillStyle="#94a3b8";
+    const ph=36+48*eta;
+    ctx.fillRect(xpix(plateL)-3, mid-ph, 6, ph*2);
+    ctx.fillRect(xpix(plateR)-3, mid-(ph*0.55), 6, ph*1.1);
+    ctx.strokeStyle="#64748b"; ctx.lineWidth=1.5;
+    ctx.beginPath();
+    ctx.moveTo(xpix(plateL), mid+ph); ctx.lineTo(xpix(plateL), mountY);
+    ctx.moveTo(xpix(plateR), mid+ph*0.55); ctx.lineTo(xpix(plateR), mountY);
+    ctx.stroke();
+    ctx.fillStyle="#8b97b8";
+    ctx.fillText("−", xpix(plateL)-10, mid-ph-6);
+    ctx.fillText("+", xpix(plateR)+8, mid-ph*0.55-6);
+
+    const qFrac = Math.min(1, Math.max(0, Q/Math.max(1e-12,Qmax)));
+    ctx.fillStyle="rgba(96,165,250,0.15)";
+    ctx.fillRect(xpix(plateL)+4, mid-18, (xpix(plateR)-xpix(plateL)-8)*qFrac, 36);
+
+    function plot(arr, color, scale, y0){
+      ctx.beginPath(); ctx.strokeStyle=color; ctx.lineWidth=1.6;
+      for (let i=0;i<N;i++){
+        const px=xpix(xs[i]), py=y0 - arr[i]*scale;
+        if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+      }
+      ctx.stroke();
+    }
+    const maxC = Math.max(1e-12, ...C.map(Math.abs));
+    const maxE = Math.max(1e-12, ...EL.map(Math.abs), 1);
+    const maxS = Math.max(1e-12, ...Scont.map(Math.abs));
+    plot(Scont, "#ffb14a", 42/maxS, 36);
+    plot(C, "#5eead4", 58/maxC, mid);
+    plot(Estat, "#60a5fa", 38/maxE, mid);
+    plot(ESLW, "#7dd3fc", 38/Math.max(1e-12,...ESLW.map(Math.abs)), mid);
+
+    const FmuN = Fnet * 1e6;
+    const cx = (xpix(plateL)+xpix(plateR))/2;
+    const cy = mountY + 7;
+    const mag = Math.min(90, 12 + 28*Math.log10(1 + Math.abs(FmuN)*1e3));
+    if (Math.abs(FmuN) > 1e-6){
+      const dir = FmuN >= 0 ? 1 : -1;
+      const x1 = cx - dir*mag*0.15;
+      const x2 = cx + dir*mag;
+      ctx.strokeStyle="#fb7185"; ctx.fillStyle="#fb7185"; ctx.lineWidth=3;
+      ctx.beginPath(); ctx.moveTo(x1, cy); ctx.lineTo(x2, cy); ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x2, cy);
+      ctx.lineTo(x2 - dir*10, cy-6);
+      ctx.lineTo(x2 - dir*10, cy+6);
+      ctx.closePath(); ctx.fill();
+      ctx.font="12px sans-serif";
+      ctx.fillText("F_net " + fmt(FmuN,2) + " μN (edu)", x2 + (dir>0?6:-110), cy-10);
+    } else {
+      ctx.fillStyle="#64748b"; ctx.font="12px sans-serif";
+      ctx.fillText("F_net ≈ 0" + (sig < 1e-6 ? " (null)" : ""), cx-40, cy-10);
+    }
+
+    ctx.fillStyle="#ffb14a"; ctx.fillText("S = ∂tρ+∇·J", 10, 16);
+    ctx.fillStyle="#5eead4"; ctx.fillText("C", 10, mid-78);
+    ctx.fillStyle="#60a5fa"; ctx.fillText("E_TEM", 36, mid-78);
+    ctx.fillStyle="#7dd3fc"; ctx.fillText("E_SLW", 96, mid-78);
+    ctx.fillStyle="#8b97b8";
+    ctx.fillText("isolated · 600 V · η="+eta.toFixed(2)+" · σ="+sig.toFixed(2)+" · "+mech, 180, mid-78);
+  }
+
+  document.querySelectorAll(".mech label.radio").forEach(lab=>{
+    lab.addEventListener("click", (e)=>{
+      e.preventDefault();
+      setMech(lab.getAttribute("data-m"));
+      if (!running) step(0.016);
+    });
+  });
+  ["eta","sig"].forEach(id=>{
+    $(id).addEventListener("input", ()=>{
+      syncLabels();
+      if (!running) step(0.016);
+    });
+  });
+  $("btnRun").onclick = ()=>{
+    running = !running;
+    $("btnRun").textContent = running ? "Pause" : "Run";
+  };
+  $("btnReset").onclick = ()=>{
+    C.fill(0); Ct.fill(0); EL.fill(0); t=0; accP=0; Q=Qmax; burstClock=0;
+    $("sig").value = "0.35";
+    $("eta").value = "0.80";
+    setMech("tunnel");
+    syncLabels();
+    step(0.016);
+  };
+  $("btnNull").onclick = ()=>{
+    $("sig").value = "0";
+    syncLabels();
+    // damp immediately
+    for (let i=0;i<N;i++){ C[i]*=0.5; Ct[i]*=0.5; }
+    step(0.016);
+  };
+
+  let last = performance.now();
+  function loop(now){
+    const wallDt = Math.min(0.05, (now - last)/1000);
+    last = now;
+    if (running) step(wallDt);
+    requestAnimationFrame(loop);
+  }
+  syncLabels();
+  setMech("tunnel");
+  Q = Qmax;
+  step(0.016);
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
