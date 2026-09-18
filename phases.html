@@ -78,6 +78,15 @@
   .note{font-size:12px;color:var(--muted);margin:6px 0 0}
   ul.clean{margin:.35rem 0;padding-left:1.15rem}
   ul.clean li{margin:.3rem 0}
+
+  .glossary{margin:10px 16px 0;padding:10px 12px;border:1px solid var(--line);background:var(--bg2,#0f1528);border-radius:8px;font-size:12px;color:var(--muted);line-height:1.55}
+  .glossary h3{margin:0 0 6px;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--eed)}
+  .glossary dl{margin:0;display:grid;grid-template-columns:1fr;gap:4px 12px}
+  @media(min-width:720px){.glossary dl{grid-template-columns:1fr 1fr}}
+  .glossary dt{color:var(--ink);font-weight:600;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px}
+  .glossary dd{margin:0 0 6px;padding-left:0}
+  .glossary .g-lead{margin:0 0 8px;color:var(--slw,#5eead4);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+
 </style>
 </head>
 <body>
@@ -103,7 +112,7 @@
 <div class="banner">
   <b>Educational toy — not a derivation of Exodus thrust.</b>
   SI: g_SLW = ε₀ C E; □C = −μ₀(∂tρ+∇·J); TEM C=0; SLW B=0, E∥k, C≠0; SW energy only.
-  Hero readout = <b>net force on the craft / mount</b>. If outbound SLW carries +P_field, the structure can show −F_net while P_matter + P_SLW ≈ 0.
+  Hero readout = <b>net force on the craft / mount</b> (F_net). See <a href="#symbols" style="color:#fde68a">Symbols</a> for g_SLW, C, ε₀, etc. If outbound SLW carries +P_field, the structure can show −F_net while P_matter + P_SLW ≈ 0.
 </div>
 
 
@@ -128,6 +137,21 @@
       Classically static + J=0 ⇒ no SLW / F_net→0.
       A continuity remainder (tunneling / pair-proxy / sub-Heisenberg) is <span class="tag hyp">HYP</span> and might source □C → possible g_SLW = ε₀CE recoil — educational only.
     </p>
+
+    <div class="glossary" id="symbols" style="margin:0 0 10px;padding:8px 10px">
+      <h3>Symbols (first use)</h3>
+      <p class="g-lead">g_SLW = ε₀ C E — SLW momentum density (SI). ε₀ = vacuum permittivity; C = Hively scalar field (same SI units as B, from C = ∇·A + c⁻² ∂t Φ); E = electric field. Related: S_SLW = C E / μ₀ (energy flux), g_SLW = S_SLW / c².</p>
+      <dl>
+        <div><dt>μ₀ · c · Φ · A · B</dt><dd>μ₀ = vacuum permeability; c = speed of light; Φ = electric scalar potential; A = magnetic vector potential; B = magnetic field.</dd></div>
+        <div><dt>ρ · J · □C</dt><dd>ρ = charge density; J = current density; □C = −μ₀(∂tρ+∇·J) — wave operator on C sourced by a continuity remainder.</dd></div>
+        <div><dt>TEM · SLW · SW</dt><dd>TEM (C=0); SLW (B=0, E∥k, C≠0, can carry momentum); SW (E=B=0, C≠0, energy only).</dd></div>
+        <div><dt>F_net · P_matter · P_SLW</dt><dd>Net craft/mount force (edu μN); matter impulse ∫F dt; field momentum ∫ ε₀ C E.</dd></div>
+        <div><dt>η · λ · Γ · Q · V · PS</dt><dd>Asymmetry; tunneling/leak; SLW coupling; charge; voltage; power supply.</dd></div>
+        <div><dt>HYP · EED · QED³</dt><dd>Hypothesized; Hively extended electrodynamics; third-order QED language (dictionary rows remain HYP).</dd></div>
+      </dl>
+      <p style="margin:4px 0 0;font-size:11px">Warm skepticism: classically static + J=0 ⇒ no SLW, F_net→0.</p>
+    </div>
+
     <details style="margin:0 0 10px">
       <summary style="cursor:pointer;color:var(--qed);font-size:12.5px;font-weight:600">What could source SLW after PS removed?</summary>
       <p style="margin:8px 0 6px;color:var(--muted);font-size:12.5px">
